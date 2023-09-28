@@ -123,7 +123,9 @@ app._favicon = (r"assets\favicon.ico")
     Output('uni_logo', 'src'),
     [Input('interval-component', 'n_intervals'),]
 )
-def get_img_url(value):
+def get_img_url(value):#this both updates the DF on log in just in case
+    global df
+    df = pd.read_pickle('last_month.pkl') #de_duped, osf_data
     try:
         user = request.authorization['username']
     except:
