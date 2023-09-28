@@ -1,0 +1,2132 @@
+Alabama A&M University
+Alabama State University
+Athens State University
+Auburn University system
+Auburn University
+Auburn University at Montgomery
+Jacksonville State University
+Troy University
+University of Alabama System
+University of Alabama (Alabama) 
+University of Alabama at Birmingham (UAB)
+University of Alabama in Huntsville (UAH)
+University of Montevallo
+University of North Alabama (UNA)
+University of South Alabama (USA)
+University of West Alabama (UWA)
+University of Alaska System
+University of Alaska Fairbanks (UAF)
+University of Alaska Anchorage (UAA)
+University of Alaska Southeast (UAS)
+Arizona Board of Regents
+Arizona State University (ASU)
+Northern Arizona University (NAU)
+University of Arizona (UofA)
+University of Arkansas System
+University of Arkansas 
+University of Arkansas–Fort Smith
+University of Arkansas at Little Rock
+University of Arkansas for Medical Sciences
+University of Arkansas at Monticello
+University of Arkansas at Pine Bluff
+Arkansas State University System
+Arkansas State University
+Henderson State University
+Arkansas Tech University
+University of Central Arkansas (UCA, Central Arkansas)
+Southern Arkansas University (SAU)
+California
+University of California system
+University of California (UC Berkeley, Cal, UCB)
+University of California (UC Davis, UCD)
+University of California (UC Irvine, UCI)
+University of California(UCLA)
+University of California(UC Merced, UCM)
+University of California (UC Riverside, UCR)
+University of California(UC San Diego, UCSD)
+University of California(UCSF)
+University of California (UC Santa Barbara, UCSB)
+University of California (UC Santa Cruz, UCSC)
+University of California College of the Law, San Francisco (UC Law SF)
+California State University
+California State University(CSUB)
+California State University (CSUCI)
+California State University (Chico State)
+California State University (CSUDH)
+California State University (CSUEB)
+California State University (Fresno State)
+California State University (CSUF, Cal State Fullerton)
+California State Polytechnic University (Cal Poly Humboldt)
+California State University (Long Beach State, LBSU, Cal State Long Beach, CSULB)
+California State University, (CSULA, Cal State LA)
+California Maritime Academy (Cal Maritime, The Academy)
+California State University,  (CSUMB)
+California State University,  (CSUN)
+California State Polytechnic University, Pomona (Cal Poly Pomona, CPP)
+California State University, (Sacramento State, Sac State)
+California State University, (CSUSB)
+San Diego State University (SDSU,  State)
+San Francisco State University (SFSU)
+San Jose State University (SJSU, San Jose State)
+California Polytechnic State University (Cal Poly, Cal Poly San Luis Obispo, Cal Poly SLO)
+California State University, (CSUSM)
+Sonoma State University (SSU)
+California State University, (Stan State)
+Adams State University
+University of Colorado system
+University of Colorado Boulder (Colorado or CU) 
+University of Colorado Colorado Springs (CU-Colorado Springs)
+University of Colorado Denver (CU-Denver)
+Colorado Mesa University
+Colorado School of Mines
+Colorado State University
+Colorado State University (Colorado State)
+Colorado State University–Pueblo (CSU-Pueblo)
+Colorado State University–Global Campus (CSU–Global)
+Fort Lewis College
+Metropolitan State University of Denver
+University of Northern Colorado
+Western Colorado University (Western)
+Connecticut
+Charter Oak State College (COSC)
+Connecticut State University System
+Central Connecticut State University (CCSU)
+Eastern Connecticut State University (ECSU)
+Southern Connecticut State University (SCSU)
+Western Connecticut State University (WCSU)
+University of Connecticut (UConn)
+Delaware
+University of Delaware (UD)
+Delaware State University
+District of Columbia
+University of the District of Columbia (UDC)
+Florida
+State University System of Florida
+Florida A&M University (FAMU)
+Florida Atlantic University (FAU)
+Florida Gulf Coast University (FGCU)
+Florida International University (FIU)
+Florida Polytechnic University (Florida Poly or FPU)
+Florida State University (FSU)
+New College of Florida (New College or NCF)
+University of Central Florida (UCF)
+University of Florida (UF)
+University of North Florida (UNF)
+University of South Florida System
+University of South Florida (USF)
+University of South Florida Sarasota–Manatee (USFSM)
+University of South Florida St. Petersburg (USFSP)
+University of West Florida (UWF)
+Florida College System
+Broward College
+Chipola College
+College of Central Florida
+Daytona State College
+Eastern Florida State College
+Florida Gateway College
+Florida SouthWestern State College
+Florida State College at Jacksonville
+Gulf Coast State College
+Indian River State College
+Lake–Sumter State College
+Miami Dade College
+Northwest Florida State College
+Palm Beach State College
+Pasco–Hernando State College
+Pensacola State College
+Polk State College
+Santa Fe College
+Seminole State College of Florida
+South Florida State College
+St. Johns River State College
+St. Petersburg College
+State College of Florida, Manatee–Sarasota
+Tallahassee Community College
+Valencia College
+Georgia
+University System of Georgia
+Abraham Baldwin Agricultural College (Abraham Baldwin)
+Albany State University
+Atlanta Metropolitan State College
+Augusta University (Augusta)
+Clayton State University
+College of Coastal Georgia (Coastal)
+Columbus State University
+Dalton State College
+East Georgia State College
+Fort Valley State University (Fort Valley)
+Georgia College and State University (Georgia College)
+Georgia Gwinnett College
+Georgia Highlands College (Highlands)
+Georgia Institute of Technology (Georgia Tech)
+Georgia Southern University
+Georgia Southwestern State University (GSW)
+Georgia State University (GSU)
+Gordon State College
+Kennesaw State University (KSU)
+Middle Georgia State University
+Savannah State University
+South Georgia State College (SGSC)
+University of Georgia (UGA)
+University of North Georgia (UNG)
+University of West Georgia (UWG)
+Valdosta State University (VSU)
+Guam
+University of Guam
+Hawaii
+University of Hawaiʻi 
+University of Hawaii 
+University of Hawaiʻi at Mānoa (UH) 
+University of Hawaiʻi at Hilo (UH Hilo)
+University of Hawaiʻi Maui College
+University of Hawaiʻi – West Oʻahu (UHWO)
+Boise State University (Boise State or BSU)
+University of Idaho (U of I or UI)
+Idaho State University (Idaho State or ISU)
+Lewis–Clark State College
+Chicago State University (Chicago State)
+Eastern Illinois University (Eastern Illinois, EIU)
+Governors State University
+Illinois State University (Illinois State, ISU)
+University of Illinois system
+University of Illinois Urbana-Champaign ( U of I, UIUC)
+University of Illinois Chicago (UIC)
+University of Illinois Springfield (UIS)
+Northeastern Illinois University
+Northern Illinois University (Northern Illinois, NIU)
+Southern Illinois University system
+Southern Illinois University Carbondale (Southern Illinois, SIU)
+Southern Illinois University Edwardsville (SIUE)
+Western Illinois University (WIU)
+Ball State University
+Indiana University 
+Indiana University Bloomington (IU) 
+Indiana University East
+Indiana University Fort Wayne
+Indiana University Kokomo (IUK)
+Indiana University Northwest
+Indiana University South Bend (IUSB)
+Indiana University Southeast
+Indiana University – Purdue University Columbus (IUPUC)
+Indiana University – Purdue University Indianapolis (IUPUI)
+Indiana State University
+Purdue University
+Purdue University Fort Wayne (PFW)
+Purdue University Northwest
+University of Southern Indiana (USI)
+Vincennes University (VU)
+University of Iowa
+Iowa State University (ISU)
+University of Northern Iowa (UNI)
+Emporia State University (Emporia State or ESU)
+Fort Hays State University (FHSU)
+University of Kansas (Kansas or KU)
+Kansas State University (K-State or KSU)
+Pittsburg State University
+Wichita State University
+Eastern Kentucky University (EKU)
+University of Kentucky
+Kentucky State University
+University of Louisville  U of L, or UL
+Morehead State University
+Murray State University
+Northern Kentucky University (NKU)
+Western Kentucky University (WKU)
+Louisiana State University System
+Louisiana State University and Agricultural and Mechanical College (LSU) 
+Louisiana State University Agricultural Center
+Louisiana State University at Eunice (LSU-Eunice)
+Louisiana State University of Alexandria (LSU-Alexandria)
+Louisiana State University Shreveport (LSU-Shreveport)
+LSU Health Sciences Center New Orleans
+LSU Health Sciences Center Shreveport
+Paul M. Hebert Law Center 
+Pennington Biomedical Research Center
+University of Louisiana System
+Grambling State University (GSU)
+Louisiana Tech University (Louisiana Tech or La Tech)
+McNeese State University (MSU)
+Nicholls State University
+Northwestern State University (NSULA)
+Southeastern Louisiana University (SELU)
+University of Louisiana at Lafayette (UL Lafayette)
+University of Louisiana at Monroe (ULM)
+University of New Orleans (UNO)
+Southern University System
+Southern University
+Southern University at New Orleans (SUNO)
+Southern University at Shreveport (SUSLA)
+Maine Maritime Academy
+University of Maine System
+University of Maine (UMaine) 
+University of Maine School of Law
+University of Maine at Augusta
+UM-Augusta
+UMA
+University of Maine at Farmington (UMaine Farmington, UM-Farmington, or UMF)
+University of Maine at Fort Kent (UMaine Fort Kent, UM-Fort Kent, or UMFK)
+University of Maine at Machias (UMaine Machias, UM-Machias, or UMM)
+University of Maine at Presque Isle (UMaine Presque Isle, UM-Presque Isle, or UMPI)
+University of Southern Maine (Southern Maine or USM)
+Maryland
+Morgan State University
+St. Mary's College of Maryland
+University System of Maryland
+University of Maryland (UMD)
+Bowie State University
+Coppin State University
+Frostburg State University
+Salisbury University
+Towson University (Towson)
+University of Baltimore (UB)
+University of Maryland (UM Baltimore or UMB)
+University of Maryland (UMBC)
+University of Maryland Eastern Shore (UMES)
+University of Maryland Global Campus (UMGC)
+University of Maryland Center for Environmental Science
+University of Maryland Biotechnology Institute
+University of Massachusetts
+University of Massachusetts Amherst (UMass, UMass Amherst)
+University of Massachusetts Boston (UMass Boston)
+University of Massachusetts Dartmouth (UMass Dartmouth)
+University of Massachusetts Lowell (UMass Lowell)
+University of Massachusetts Medical School
+Bridgewater State University
+Fitchburg State University
+Framingham State University
+Salem State University
+Westfield State University
+Worcester State University
+Massachusetts College of Art and Design (MassArt)
+Massachusetts College of Liberal Arts
+Massachusetts Maritime Academy
+Central Michigan University (CMU)
+Eastern Michigan University (EMU)
+Ferris State University (Ferris State)
+Grand Valley State University (Grand Valley State or GVSU)
+Lake Superior State University
+University of Michigan system
+University of Michigan (Michigan) 
+University of Michigan–Dearborn
+University of Michigan–Flint
+Michigan State University (Michigan State or MSU)
+Michigan Technological University (Michigan Tech)
+Northern Michigan University (NMU)
+Oakland University (OU)
+Saginaw Valley State University
+Wayne State University (Wayne State or WSU)
+Western Michigan University (WMU)
+Minnesota State Colleges and Universities system
+Bemidji State University
+Minnesota State University 
+Minnesota State University Moorhead
+Metropolitan State University
+Southwest Minnesota State University
+St. Cloud State University
+Winona State University
+University of Minnesota system
+University of Minnesota (U of M)
+University of Minnesota Crookston
+University of Minnesota Duluth
+University of Minnesota Morris
+University of Minnesota Rochester
+Alcorn State University (Alcorn)
+Delta State University (Delta State)
+Jackson State University (Jackson State or JSU)
+Mississippi State University (Mississippi State or MSU)
+Mississippi University for Women (MUW)
+Mississippi Valley State University
+University of Mississippi (Ole Miss)
+University of Southern Mississippi (Southern Miss or USM)
+Missouri
+University of Central Missouri (UCM)
+Harris–Stowe State University
+Lincoln University of Missouri
+University of Missouri System
+University of Missouri (Missouri or Mizzou)
+University of Missouri–Kansas City (UMKC)
+Missouri University of Science and Technology (Missouri S&T)
+University of Missouri–St. Louis (UMSL)
+Missouri Southern State University
+Missouri State University
+Missouri Western State University
+Northwest Missouri State University
+Southeast Missouri State University
+Truman State University (formerly Northeast Missouri State University)
+Montana University
+Montana State University System
+Montana State University (Montana State)
+Montana State University Billings (Billings)
+Montana State University–Northern (Havre)
+University of Montana
+Montana Technological University (Montana Tech)
+University of Montana Western (Dillon)
+Nebraska State College System
+Chadron State College
+Peru State College
+Wayne State College
+University of Nebraska system
+University of Nebraska–Lincoln (Nebraska or UNL) 
+University of Nebraska at Kearney (UNK)
+University of Nebraska Omaha (UNO)
+University of Nebraska Medical Center (UNMC)
+Nevada System of Higher Education
+University of Nevada
+College of Southern Nevada
+Great Basin College 
+Nevada State College
+University of Nevada (UNLV)
+Western Nevada College
+Truckee Meadows Community College 
+University System of New Hampshire
+Granite State College
+Keene State College
+Plymouth State University
+University of New Hampshire (UNH)
+New Jersey
+The College of New Jersey
+Kean University
+Montclair State University
+New Jersey City University
+New Jersey Institute of Technology (NJIT)
+Ramapo College of New Jersey
+Rowan University
+Rutgers University system
+Rutgers University–New Brunswick (Rutgers)
+Rutgers University–Newark
+Rutgers University–Camden
+Stockton University
+Thomas Edison State University
+William Paterson University of New Jersey
+Eastern New Mexico University (ENMU)
+University of New Mexico (UNM)
+New Mexico Highlands University
+New Mexico State University (NMSU)
+New Mexico Institute of Mining and Technology (New Mexico Tech)
+Northern New Mexico College
+Western New Mexico University (WNMU)
+State University of New York (SUNY)
+The State University of New York at Buffalo (University at Buffalo, UBuffalo)
+University at Albany (UAlbany)
+Binghamton University
+Stony Brook University (Stony Brook)
+Health Science Center Brooklyn
+State University of New York Upstate Medical University
+State University of New York Polytechnic Institute (SUNY Poly)
+Buffalo State University
+Empire State College
+State University of New York at Brockport (SUNY Brockport)
+State University of New York at Cortland (SUNY Cortland)
+State University of New York at Fredonia (SUNY Fredonia)
+State University of New York at Geneseo (SUNY Geneseo)
+State University of New York at New Paltz (SUNY New Paltz)
+State University of New York at Old Westbury (SUNY Old Westbury)
+State University of New York at Oneonta (SUNY Oneonta)
+State University of New York at Oswego (SUNY Oswego)
+State University of New York at Plattsburgh (SUNY Plattsburgh)
+State University of New York at Potsdam (SUNY Potsdam)
+State University of New York at Purchase (SUNY Purchase)
+Alfred State College
+Fashion Institute of Technology
+State University of New York at Canton (SUNY Canton)
+State University of New York at Cobleskill (SUNY Cobleskill)
+State University of New York at Delhi (SUNY Delhi)
+State University of New York at Farmingdale (SUNY Farmingdale)
+Morrisville State College
+State University of New York Maritime College (SUNY Maritime)
+City University of New York (CUNY)
+Baruch College
+Brooklyn College
+City College of New York
+College of Staten Island
+Hunter College
+John Jay College of Criminal Justice
+Lehman College
+Medgar Evers College
+New York City College of Technology
+Queens College
+York College
+Graduate and professional schools
+CUNY Graduate Center
+CUNY Graduate School of Journalism
+CUNY School of Law
+CUNY School of Medicine
+CUNY School of Professional Studies
+CUNY School of Public Health
+William E. Macaulay
+University of North Carolina
+Appalachian State University (Appalachian State or App State)
+East Carolina University (ECU)
+Elizabeth City State University (ECSU)
+Fayetteville State University (FSU)
+North Carolina A&T State University (North Carolina A&T)
+North Carolina Central University (North Carolina Central or NCCU)
+North Carolina State University (North Carolina State, NC State, NCSU)
+University of North Carolina at Asheville (UNC Asheville or UNCA)
+University of North Carolina at Chapel Hill 
+University of North Carolina at Charlotte (UNC Charlotte or Charlotte)
+University of North Carolina at Greensboro (UNC Greensboro or UNCG)
+University of North Carolina at Pembroke (UNC Pembroke)
+University of North Carolina at Wilmington (UNC Wilmington or UNCW)
+University of North Carolina School of the Arts (UNC School of the Arts)
+Western Carolina University (WCU)
+Winston-Salem State University (WSSU)
+North Dakota University
+Dickinson State University
+Mayville State University
+Minot State University
+University of North Dakota (UND) 
+North Dakota State University (North Dakota State or NDSU)
+Valley City State University
+Northern Mariana Islands
+Northern Marianas College
+University System of Ohio
+University of Akron
+Bowling Green State University (BGSU)
+Central State University
+University of Cincinnati
+Cleveland State University
+Kent State University
+Miami University
+Northeast Ohio Medical University
+Ohio State University
+Ohio University
+Shawnee State University
+University of Toledo
+Wright State University
+Youngstown State University
+Cameron University
+East Central University
+Langston University
+Northeastern State University
+Northwestern Oklahoma State University
+University of Oklahoma system
+University of Oklahoma
+University of Oklahoma-Tulsa Schusterman Center
+University of Oklahoma Health Sciences Center
+Oklahoma Panhandle State University
+Oklahoma State University System
+Oklahoma State University–Stillwater (Oklahoma State)
+Oklahoma State University Center for Health Sciences
+Oklahoma State University Institute of Technology
+Oklahoma State University–Oklahoma City
+Oklahoma State University–Tulsa
+Rogers State University
+University of Science and Arts of Oklahoma
+Southeastern Oklahoma State University
+Southwestern Oklahoma State University
+University of Central Oklahoma
+Eastern Oregon University (EOU)
+Oregon Health & Science University (OHSU)
+Oregon Institute of Technology (Oregon Tech or OIT)
+Oregon State University (Oregon State or OSU)
+Oregon State University-Cascades (OSU Cascades)
+Portland State University (Portland State or PSU)
+Southern Oregon University (SOU)
+University of Oregon (Oregon or UO)
+Western Oregon University (WOU)
+Pennsylvania State System of Higher Education (PaSSHE)
+Bloomsburg University of Pennsylvania
+California University of Pennsylvania
+Cheyney University of Pennsylvania
+Clarion University of Pennsylvania
+East Stroudsburg University of Pennsylvania
+Edinboro University of Pennsylvania
+Indiana University of Pennsylvania (IUP)
+Kutztown University of Pennsylvania
+Lock Haven University of Pennsylvania
+Mansfield University of Pennsylvania
+Millersville University of Pennsylvania
+Shippensburg University of Pennsylvania
+Slippery Rock University of Pennsylvania
+West Chester University of Pennsylvania
+Commonwealth System of Higher Education
+Lincoln University
+Penn State
+Pennsylvania State University
+Penn State University Park
+Penn State Abington (PSU-Abingdon)
+Penn State Altoona (PSU-Altoona)
+Penn State Berks (PSU-Berks)
+Penn State Beaver (PSU-Beaver)
+Penn State Brandywine (PSU-Brandywine)
+Penn State College of Medicine
+Penn State Dickinson Law
+Penn State DuBois (PSU-DuBois)
+Penn State Erie, The Behrend College (PSU-Erie)
+Penn State Fayette (PSU-Fayette)
+Penn State Great Valley (PSU-Great Valley)
+Penn State Greater Allegheny (PSU-Greater Allegheny)
+Penn State Harrisburg (PSU-Harrisburg)
+Penn State Hazleton (PSU-Hazleton)
+Penn State Lehigh Valley (PSU-Lehigh Valley)
+Penn State Mont Alto (PSU-Mont Alto)
+Penn State New Kensington (PSU-New Kensington)
+Penn State Schuylkill (PSU-Schuylkill)
+Penn State Scranton (PSU-Scranton)
+Penn State Shenango (PSU-Shenango)
+Penn State Wilkes-Barre (PSU-Wilkes-Barre)
+Penn State World Campus
+Penn State York (PSU-York)
+Temple University
+Temple University Ambler (TU-Ambler)
+University of Pittsburgh (Pittsburgh or Pitt)
+University of Pittsburgh at Bradford
+University of Pittsburgh at Greensburg
+University of Pittsburgh at Johnstown
+University of Pittsburgh at Titusville
+University of Puerto Rico
+University of Puerto Rico at Rio Piedras (UPR-RP)
+University of Puerto Rico at Mayagüez (UPRM)
+University of Puerto Rico at Arecibo (UPRA)
+University of Puerto Rico at Bayamón (UPRB)
+University of Puerto Rico at Carolina (UPRC)
+University of Puerto Rico at Cayey (UPR-Cayey)
+University of Puerto Rico at Humacao (UPRH)
+University of Puerto Rico at Aguadilla (UPRAG)
+University of Puerto Rico at Ponce (UPRP)
+University of Puerto Rico at Utuado (UPRU)
+University of Puerto Rico (UPR-CM)
+Conservatory of Music of Puerto Rico
+Rhode Island College (RIC)
+University of Rhode Island
+The Citadel
+Clemson University
+Coastal Carolina University (Coastal Carolina or CCU)
+College of Charleston (CofC)
+Francis Marion University
+Lander University
+Medical University of South Carolina
+University of South Carolina 
+University of South Carolina (USC, or SCar)
+University of South Carolina Aiken (USC-Aiken)
+University of South Carolina Beaufort (USC-Beaufort)
+University of South Carolina Lancaster (USC-Lancaster)
+University of South Carolina Salkehatchie (USC-Salkehatchie)
+University of South Carolina Sumter (USC-Sumter)
+University of South Carolina Union (USC-Union)
+University of South Carolina Upstate (USC-Upstate or Upstate)
+South Carolina State University (SCSU)
+Winthrop University (WU)
+Black Hills State University
+Dakota State University
+Northern State University
+University of South Dakota
+South Dakota School of Mines and Technology (South Dakota School of Mines, South Dakota Tech, or SDSM&T)
+South Dakota State University (South Dakota State or SDSU)
+Austin Peay State University (Austin Peay or APSU)
+East Tennessee State University (ETSU)
+Middle Tennessee State University (MTSU)
+Tennessee State University (TSU)
+Tennessee Technological University (Tennessee Tech or TTU)
+University of Memphis (U of M)
+University of Tennessee
+University of Tennessee at Knoxville (UT Knoxville, UTK, or UT)
+University of Tennessee at Chattanooga (UT Chattanooga or UTC)
+University of Tennessee at Martin (UT Martin or UTM)
+University of Tennessee Health Science Center (UTHSC or UT Medical School)
+University of Tennessee Southern
+University of Tennessee Space Institute (UT Space Institute)
+University of Houston 
+University of Houston–Clear Lake
+University of Houston–Downtown
+University of Houston–Victoria
+University of North Texas 
+University of North Texas at Dallas
+University of North Texas Health Science Center
+The University of Texas
+The University of Texas at Arlington
+The University of Texas at Austin 
+The University of Texas at Dallas
+The University of Texas at El Paso
+The University of Texas Permian Basin
+The University of Texas Rio Grande Valley
+The University of Texas at San Antonio
+The University of Texas at Tyler
+Stephen F. Austin State University
+University of Texas MD Anderson Cancer Center
+University of Texas Medical Branch
+University of Texas Southwestern Medical Center
+University of Texas Health Science Center at Houston (UTHealth)
+University of Texas Health Science Center at San Antonio
+University of Texas Health Science Center at Tyler
+Texas A&M University
+Texas A&M University (Texas A&M or A&M)
+Prairie View A&M University
+Tarleton State University
+Texas A&M International University
+Texas A&M University–Central Texas
+Texas A&M University–Commerce
+Texas A&M University–Corpus Christi
+Texas A&M University–Kingsville
+Texas A&M University–San Antonio
+Texas A&M University–Texarkana
+West Texas A&M University
+Texas Southern University
+Texas State University System
+Lamar University
+Sam Houston State University
+Sul Ross State University
+Texas State University
+Texas Tech University System
+Academic institutions
+Angelo State University
+Midwestern State University
+Texas Tech University (Texas Tech)
+Health institutions
+Texas Tech University Health Sciences Center
+Texas Tech University Health Sciences Center El Paso
+Texas Woman's University
+Snow College
+Southern Utah University (Southern Utah or SUU)
+University of Utah (U of U, or UU)
+Utah State University (Utah State or USU)
+Utah State University Eastern (USUE)
+Utah Tech University (Utah Tech or UT)
+Utah Valley University (Utah Valley or UVU)
+Weber State University (Weber State)
+Vermont State University
+University of Vermont (UVM)
+Christopher Newport University (CNU)
+Eastern Virginia Medical School (EVMS)
+George Mason University (George Mason, GMU, or Mason)
+James Madison University (JMU or James Madison)
+Longwood University
+University of Mary Washington (Mary Washington, Mary Wash, or UMW)
+Norfolk State University
+Old Dominion University (Old Dominion or ODU)
+Radford University
+University of Virginia (UVA)
+University of Virginia's College at Wise (UVA at Wise or UVA-Wise)
+Virginia Commonwealth University (VCU)
+Virginia Military Institute (VMI)
+Virginia Polytechnic Institute and State University (Virginia Tech or VT)
+Virginia State University (VSU)
+The College of William & Mary (William and Mary, W&M)
+University of the Virgin Islands 
+Central Washington University (CWU)
+Eastern Washington University (EWU)
+Evergreen State College
+University of Washington
+Washington State University
+Washington State University 
+Washington State University Everett
+Washington State University Spokane
+Washington State University Tri-Cities
+Washington State University Vancouver
+Washington State University Global Campus
+Western Washington University
+Bluefield State University
+Concord University
+Fairmont State University
+Glenville State University
+Marshall University
+Shepherd University
+West Liberty University
+West Virginia University at Parkersburg
+West Virginia University system
+West Virginia University 
+Potomac State College of West Virginia University
+West Virginia University Institute of Technology
+West Virginia School of Osteopathic Medicine
+West Virginia State University (WVSU)
+University of Wisconsin System
+University of Wisconsin–Madison
+University of Wisconsin–Eau Claire
+University of Wisconsin–Green Bay
+University of Wisconsin–La Crosse
+University of Wisconsin–Milwaukee
+University of Wisconsin–Oshkosh
+University of Wisconsin–Parkside
+University of Wisconsin–Platteville
+University of Wisconsin–River Falls
+University of Wisconsin–Stevens Point
+University of Wisconsin–Stout
+University of Wisconsin–Superior
+University of Wisconsin–Whitewater
+University of Wyoming
+AECOM
+Albert Einstein College of Medicine
+AFA
+United States Air Force Academy
+AFIT
+Air Force Institute of Technology
+AIC
+American International College
+Annapolis
+U.S. Naval Academy
+A&M
+Texas A&M University
+Also others:see A&M
+A&M-CC or A&M-Corpus Christi
+Texas A&M University–Corpus Christi
+A&T
+North Carolina A&T State University
+APSU
+Austin Peay State University
+ALASU
+Alabama State University
+Army
+U.S. Military Academy
+ASU
+Alabama State University
+Albany State University
+Alcorn State University
+Angelo State University
+Appalachian State University
+Arizona State University
+Arkansas State University
+Augusta State University
+APU
+Alaska Pacific University
+AU
+Adelphi University
+Alfred University
+American University
+Anderson University
+Anderson University
+Asbury University
+Auburn University
+Ashford University
+Arcadia University
+Augusta University
+AUM
+Auburn University Montgomery
+App State
+Appalachian State University
+B
+Bama
+University of Alabama
+BC
+Boston College
+Bethel College
+BCC
+Bronx Community College
+Berkeley
+University of California
+BGSU
+Bowling Green State University
+BHSU
+Black Hills State University
+BJU
+Bob Jones University
+BMC
+Bryn Mawr College
+Bona
+St. Bonaventure University
+Brown
+Brown University
+BSC
+Birmingham-Southern College
+BSU
+Ball State University
+Boise State University
+Bemidji State University
+Bowie State University
+BW
+Baldwin Wallace University
+BU
+Barry University
+Baylor University
+Belmont University
+Binghamton University
+Biola University
+Boston University
+Bradley University
+Butler University
+Bucknell University
+BYU
+Brigham Young University
+C
+CBU
+California Baptist University
+C of C
+College of Charleston
+University of California
+Cal Poly
+California Polytechnic State University
+Cal Poly Pomona
+California State Polytechnic University
+Caltech
+California Institute of Technology
+Cal State
+California State University
+Carolina
+University of North Carolina at Chapel Hill
+University of South Carolina
+Catholic
+Catholic University of America
+Central
+Central State University
+North Carolina Central University
+Colorado College
+CCNY
+City College of New York
+CCSU
+Central Connecticut State University
+CCU
+Coastal Carolina University
+CCV
+Community College of Vermont
+CGU
+Claremont Graduate University
+Chapel Hill
+University of North Carolina at Chapel Hill
+Charlotte
+University of North Carolina at Charlotte
+Chatt or Chattanooga
+University of Tennessee at Chattanooga
+Chatt State
+Chattanooga State Community College
+Chico State
+California State University
+City Tech
+New York City College of Technology
+CIA
+The Culinary Institute of America
+CMC
+Claremont McKenna College
+CMU
+Carnegie Mellon University
+Central Michigan University
+CNU
+Christopher Newport University
+United States Coast Guard Academy
+University of Maryland
+University of Colorado Colorado Springs
+Connecticut College
+California State University
+Cleveland State University
+Colorado State University
+Clayton State University
+Coppin State University
+Clarks Summit University
+Chicago State University
+CSUF
+California State University
+CSUEB
+California State University
+CSULA
+California State University
+CSULB
+California State University
+CSU-Pueblo
+Colorado State University-Pueblo
+CSUS
+California State University
+CU
+Chapman University
+Clemson University
+University of Colorado at Boulder
+University of Colorado system
+Columbia University
+Concord University
+Cornell University
+Creighton University
+CUA
+Catholic University of America
+CUD
+University of Colorado Denver
+Cumberlands
+University of the Cumberlands
+CUNY
+City University of New York
+'Cuse
+Syracuse University
+CWRU
+Case Western Reserve University
+CWU
+Central Washington University
+DBU
+Dallas Baptist University
+DC
+Dartmouth College
+Davidson College
+De Anza
+De Anza College
+DPU
+DePaul University
+DSU
+DeSales University
+Delta State University
+Dakota State University
+Denison University
+University of Denver
+Drake University
+Drexel University
+Duke University
+Duquesne University
+Duke
+Duke University
+ECSU
+Elizabeth City State University
+ECU
+East Carolina University
+EIU
+Eastern Illinois University
+EMU
+Eastern Mennonite University
+EMU
+Eastern Michigan University
+ENC
+Eastern Nazarene College
+ESU
+Emporia State University
+ETBU
+East Texas Baptist University
+ETSU
+East Tennessee State University
+EWU
+Eastern Washington University
+EKU
+Eastern Kentucky University
+F&M
+Franklin & Marshall College
+FAMU
+Florida A&M University
+FAU
+Florida Atlantic University
+FDU
+Fairleigh Dickinson University
+FGCU
+Florida Gulf Coast University
+FHSU
+Fort Hays State University
+FIT
+Fashion Institute of Technology
+FIU
+Florida International University
+Florida Tech
+Florida Institute of Technology
+Foothill
+Foothill College
+FPU
+Fresno Pacific University
+Fresno State
+California State University
+FSU
+Fayetteville State University
+Ferris State University
+Fitchburg State University
+Florida State University
+Framingham State University
+California State University
+Frostburg State University
+FU
+Fordham University
+Furman University
+GB
+University of Wisconsin–Green Bay
+GC&SU or GCSU
+Georgia College & State University
+GCU
+Grand Canyon University
+Georgia College
+Georgia College & State University
+Georgia State
+GSU
+GMU
+George Mason University
+Georgia Tech
+Georgia Institute of Technology
+GT
+gatech
+GGC
+Georgia Gwinnett College
+GONZ
+Gonzaga University
+GSU
+Georgia Southern University
+Georgia State University
+Grambling State University
+GT
+Georgia Institute of Technology
+GVSU
+Grand Valley State University
+GW or GWU
+Gardner-Webb University
+George Washington University
+GU
+Gallaudet University
+Georgetown University
+Gonzaga University
+HC
+Haverford College
+HIU
+Hampton University
+HMC
+Harvey Mudd College
+Hopkins
+Johns Hopkins University
+HU
+Howard University
+HU
+Hampton University
+HSC or H-SC
+Hampden Sydney College
+HSU
+Humboldt State University
+Hardin-Simmons University
+IC
+Ithaca College
+IIT
+Illinois Institute of Technology
+IPFW
+Indiana University-Purdue University Fort Wayne
+ISU
+Idaho State University
+Illinois State University
+Indiana State University
+Iowa State University
+IU
+Indiana University Bloomington
+IUP
+Indiana University of Pennsylvania 
+IUPUI
+Indiana University-Purdue University Indianapolis
+IWU
+Illinois Wesleyan University
+IW
+Iowa Wesleyan University
+JBU
+John Brown University
+JCSU
+Johnson C. Smith University
+JHU
+Johns Hopkins University
+JMU
+James Madison University
+JWU
+Johnson and Wales University
+JSU
+Jackson State University
+Jacksonville State University
+JU
+Jacksonville University
+Jax st or J'ville st
+Jacksonville State University
+K-State
+Kansas State University
+Kentucky State University
+KSU
+Kansas State University
+Kennesaw State University
+Kent State University
+Kentucky State University
+KU
+University of Kansas
+Kutztown University of Pennsylvania
+KYSU
+Kentucky State University
+LA Tech
+Louisiana Tech University
+LC
+Louisburg College
+LETU
+LeTourneau University
+LHU
+Lock Haven University
+LIU
+Long Island University
+LMU
+Lincoln Memorial University
+Loyola Marymount University
+Long Beach State
+California State University
+LSU
+La Salle University
+Louisiana State University
+LSSU
+Lake Superior State University
+LTU
+Lawrence Technological University
+LU
+Liberty University
+Lipscomb University
+Lehigh University
+LUC
+Loyola University Chicago
+Madison
+James Madison University
+University of Wisconsin–Madison
+Mary Wash
+University of Mary Washington
+Mason
+George Mason University
+MCLA
+Massachusetts College of Liberal Arts
+Memphis
+University of Memphis
+U.S. Merchant Marine Academy
+Metro State
+Metropolitan State College of Denver
+MHC or MoHo
+Mount Holyoke College
+Midd
+Middlebury College
+Milwaukee
+University of Wisconsin–Milwaukee
+Missouri S&T
+Missouri University of Science and Technology
+MIT
+Massachusetts Institute of Technology
+Mizzou
+University of Missouri
+MMC
+Marymount Manhattan College
+Mt. SAC
+Mt. San Antonio College
+MSU
+Michigan State University
+Mississippi State University
+Missouri State University
+Morehead State University
+Murray State University
+Montana State University System
+Montana State University
+Montclair State University
+Mountain State University
+Morgan State University
+MTSU
+Middle Tennessee State University
+MTU
+Michigan Technological University
+MU
+Miami University
+Marymount University
+University of Missouri
+Misericordia University
+Millersville University
+Mercyhurst University
+Mudd
+Harvey Mudd College
+MVille
+Manhattanville College
+MVSU
+Mississippi Valley State University
+MUW
+United States Naval Academy
+NAU
+Northern Arizona University
+National American University
+NCCU
+North Carolina Central University
+NCSU
+North Carolina State University
+NC A&T
+North Carolina A&T State University
+ND
+University of North Dakota
+University of Notre Dame
+NDSU
+North Dakota State University
+NEU
+Northeastern University
+NCB
+New College Berkeley
+NCF
+New College of Florida
+Newport News
+Apprentice School
+NIU
+Northern Illinois University
+NJIT
+New Jersey Institute of Technology
+NKU
+Northern Kentucky University
+NMSU
+New Mexico State University
+NMU
+Northern Michigan University
+NoDak
+University of North Dakota
+Nova
+Northern Virginia Community College
+Villanova University
+NSU
+Norfolk State University
+Northern State University
+Northeastern State University
+Northwestern State University
+Nova Southeastern University
+NU
+Northeastern University
+University of Nebraska–Lincoln
+Niagara University
+Northwestern University
+Norwich University
+NVU
+Northern Vermont University
+NWMSU
+Northwest Missouri State University
+NYIT
+New York Institute of Technology (New York Tech)
+NYMC
+New York Medical College
+NYU
+New York University
+OC
+Oklahoma Christian University
+OBU
+Oklahoma Baptist University
+OCC
+Orange Coast College
+OCU
+Oklahoma City University
+ODU
+Ohio Dominican University
+Old Dominion University
+OIT
+Oregon Institute of Technology
+OK State
+Oklahoma State University
+Ole Miss
+University of Mississippi
+ONU
+Ohio Northern University
+ORU
+Oral Roberts University
+OSU
+Ohio State University
+Oklahoma State University
+Oregon State University
+OU
+Oakland University
+Ohio University
+University of Oklahoma
+Oakwood University
+Oxy
+Occidental College
+University of the Pacific
+PC
+Presbyterian College
+Providence College
+PCC
+Pasadena City College
+Pensacola Christian College
+Pima Community College
+Polk Community College
+Portland Community College
+Pueblo Community College
+Penn
+University of Pennsylvania
+Penn State
+Pennsylvania State University
+PennWest
+Pennsylvania Western University
+Pitt
+University of Pittsburgh
+PLNU
+Point Loma Nazarene University
+POM
+Pomona College
+PSU
+Pennsylvania State University
+Pittsburg State University
+Portland State University
+Plymouth State University
+PTS
+Princeton Theological Seminary
+PVAMU
+Prairie View A&M University
+QC
+Queens College
+Queens College
+City University of New York 
+Quincy College
+Quincy University
+Quinnipiac University
+RHIT
+Rose-Hulman Institute of Technology
+RIC
+Rhode Island College
+RISD
+Rhode Island School of Design
+RIT
+Rochester Institute of Technology
+RMU
+Robert Morris University
+R-MWC
+Randolph-Macon Woman's College
+RPI
+Rensselaer Polytechnic Institute
+RU
+Rutgers University
+RWU
+Roger Williams University
+Sacramento State / Sac State
+California State University
+SBU
+St. Bonaventure University
+SC
+University of Southern California
+University of South Carolina
+SCSU
+South Carolina State University
+Southern Connecticut State University
+Scripps
+Scripps College
+Scripps Institution of Oceanography
+SCU
+Santa Clara University
+SDSM&T
+South Dakota School of Mines and Technology
+SDSU
+South Dakota State University
+San Diego State University
+SeattleU
+Seattle University
+SEMo
+Southeast Missouri State University
+SEU
+Saint Elizabeth University
+SFSU
+San Francisco State University
+SHC
+Spring Hill College
+SIU or SIUC
+Southern Illinois University Carbondale
+SIUE
+Southern Illinois University Edwardsville
+SJC
+St. John's College
+SJFU
+St. John Fisher University
+SJSU
+San Jose State University
+SJU
+Saint Joseph's University
+St. John's University
+SLU
+Saint Louis University
+St. Lawrence University
+Saint Leo University
+SMC
+Saint Mary's College of California
+SMU
+Southern Methodist University
+SNHU
+Southern New Hampshire University
+SOSU
+Southeastern Oklahoma State University
+SPU
+Seattle Pacific University
+SRU
+Slippery Rock University of Pennsylvania
+Stanislaus State or Stan State
+California State University
+SSU
+Savannah State University
+California State University
+State
+SU
+Southwestern University
+Shenandoah University
+Southern University
+Susquehanna University
+Syracuse University
+Salisbury University
+Samford University
+Schreiner University
+SUNO
+Southern University at New Orleans
+SUU
+Southern Utah University
+SUNY
+State University of New York system
+SVSU
+Saginaw Valley State University
+Swat
+Swarthmore College
+SWOSU
+Southwestern Oklahoma State University
+TAMU
+Texas A&M University
+TAMUCC
+Texas A&M University–Corpus Christi
+TCNJ
+The College of New Jersey
+TCU
+Texas Christian University
+Tech
+Transy
+Transylvania University
+TSU
+Tarleton State University
+Tennessee State University
+Texas Southern University
+Truman State University
+TTU
+Texas Tech University
+Tennessee Technological University
+TU
+Temple University
+Towson University
+Tufts University
+Tulane University
+Tuskegee University
+University of Tulsa
+TxSt
+Texas State University–San Marcos
+The U
+University of Miami
+University of Minnesota
+University of Utah
+U of A
+University of Arizona
+University of Arkansas
+U of U
+University of Utah
+UA
+University of Akron
+University of Alabama
+University of Arizona
+UAA
+University of Alaska Anchorage
+UAB
+University of Alabama at Birmingham
+UAF
+University of Alaska Fairbanks
+UAH
+University of Alabama in Huntsville
+UALR
+University of Arkansas at Little Rock
+UAM
+University of Arkansas at Monticello
+UAPB
+University of Arkansas at Pine Bluff
+UB
+University of Baltimore
+University at Buffalo
+University of Bridgeport
+U of C
+University of Chicago
+UC
+University of California system
+University of Chicago
+University of Cincinnati
+University of the Cumberlands
+UC Berkeley
+University of California
+UC Davis
+University of California
+UC Irvine
+University of California
+UCA
+University of Central Arkansas
+UCCS
+University of Colorado Colorado Springs
+UCD
+University of California
+UCF
+University of Central Florida
+UChicago
+University of Chicago
+UCI
+University of California
+UCLA
+University of California
+UCM
+University of Central Missouri
+UCO
+University of Central Oklahoma
+UConn
+University of Connecticut
+UCR
+University of California
+UCSB
+University of California
+UCSD
+University of California
+UCSF
+University of California
+UD
+University of Dallas
+University of Dayton
+University of Delaware
+UDM
+University of Detroit Mercy
+UDC
+University of the District of Columbia
+U Dub
+University of Washington
+UF
+University of Florida
+UGA
+University of Georgia
+UH
+University of Hawaiʻi at Mānoa
+University of Hawaii system
+University of Houston
+U of H
+University of Houston
+UHCL
+University of Houston–Clear Lake
+UHD
+University of Houston–Downtown
+UHS
+University of Houston System
+UHV
+University of Houston–Victoria
+UI or U of I
+University of Idaho
+University of Illinois at Urbana–Champaign
+University of Iowa
+UIC
+University of Illinois at Chicago
+UIUC
+University of Illinois at Urbana–Champaign
+UK
+University of Kentucky
+ULM
+University of Louisiana at Monroe
+UL
+University of Louisiana at Lafayette
+U of L
+University of Louisville
+U of M
+University of Memphis
+University of Miami
+University of Michigan
+University of Minnesota
+University of Montana
+UMass
+University of Massachusetts Amherst
+UMB
+University of Maryland
+University of Massachusetts Boston
+UMBC
+University of Maryland
+UMD
+University of Maryland
+University of Massachusetts Dartmouth
+University of Michigan–Dearborn
+University of Minnesota Duluth
+UMGC
+University of Maryland Global Campus
+UMich
+University of Michigan
+UMKC
+University of Missouri–Kansas City
+UML
+University of Massachusetts Lowell
+UMO
+University of Maine at Orono
+UMW
+University of Mary Washington
+UNA
+University of North Alabama
+UNC
+University of North Carolina at Chapel Hill
+University of Northern Colorado
+UNCC
+University of North Carolina at Charlotte
+UNCG
+University of North Carolina at Greensboro
+UNCW
+University of North Carolina at Wilmington
+UND
+University of North Dakota
+UNF
+University of North Florida
+UNH
+University of New Hampshire
+University of New Haven
+UNI
+University of Northern Iowa
+Union
+Union College
+UNK
+University of Nebraska at Kearney
+UNL
+University of Nebraska–Lincoln
+UNLV
+University of Nevada
+UNM
+University of New Mexico
+UNO
+University of Nebraska at Omaha
+University of New Orleans
+UNR
+University of Nevada
+UNT
+University of North Texas
+UO
+University of Oregon
+UOP
+University of the Pacific
+UoPeople
+University of the People
+UP
+University of Portland
+UPenn
+University of Pennsylvania
+UPIKE
+University of Pikeville
+UR or U of R
+University of Richmond
+University of Rochester
+URI
+University of Rhode Island
+U of S
+University of Scranton
+USA
+University of South Alabama
+USAFA
+United States Air Force Academy
+USAO
+University of Science and Arts of Oklahoma
+USC
+University of Southern California
+University of South Carolina
+USCA
+University of South Carolina Aiken
+USD
+University of San Diego
+University of South Dakota
+USF
+University of San Francisco
+University of South Florida
+USFCA
+University of San Francisco
+USI
+University of Southern Indiana
+USM
+University of Southern Maine
+The University of Southern Mississippi
+USU
+Utah State University
+UT
+University of Tampa
+University of Tennessee
+University of Texas at Austin
+University of Toledo
+UTA
+University of Texas at Arlington
+UTB
+University of Texas at Brownsville
+UTC
+University of Tennessee at Chattanooga
+UTD
+University of Texas at Dallas
+UTEP
+University of Texas at El Paso
+UTHSCT
+University of Texas Health Science Center at Tyler
+UTM
+University of Tennessee at Martin
+UTPB
+University of Texas Permian Basin
+UTRGV
+University of Texas Rio Grande Valley
+UTSA
+University of Texas at San Antonio
+U of U
+University of Utah
+UVA
+University of Virginia
+UVM
+University of Vermont
+UVU
+Utah Valley University
+UW
+University of Washington
+University of Wisconsin System
+University of Wisconsin–Madison
+University of Wyoming
+UWF
+University of West Florida
+UWG
+University of West Georgia
+UWGB
+University of Wisconsin–Green Bay
+UWM
+University of Wisconsin–Milwaukee
+Valpo
+Valparaiso University
+Vandy
+Vanderbilt University
+VCU
+Virginia Commonwealth University
+Virginia Tech
+Virginia Polytechnic Institute and State University
+VMI
+Virginia Military Institute
+VPI
+Virginia Polytechnic Institute and State University
+VSU
+Valdosta State University
+Virginia State University
+VT
+Virginia Polytechnic Institute and State University
+VTC
+Vermont Technical College
+VTSU
+Vermont State University
+VU
+Valparaiso University
+Vanderbilt University
+Villanova University
+Vincennes University
+Vanguard University
+VUU
+Virginia Union University
+WCU
+Western Colorado University
+W&J
+Washington & Jefferson College
+W&L
+Washington and Lee University
+W&M
+The College of William & Mary
+WashU or Wash U
+Washington University in St. Louis
+Wazzu
+Washington State University
+WC
+Wagner College
+Wilmington College
+WCU
+Western Carolina University
+West Chester University
+West Point
+United States Military Academy
+Western
+Western Washington University
+WFU
+Wake Forest University
+WGU
+Western Governors University
+Williams
+Williams College
+WIU
+Western Illinois University
+WKU
+Western Kentucky University
+WMU
+Western Michigan University
+WPI
+Worcester Polytechnic Institute
+WSU
+Washington State University
+Wichita State University
+Wright State University
+WSSU
+Winston-Salem State University
+WTAMU
+West Texas A&M University
+WU
+Washburn University
+Washington University in St. Louis
+Winthrop University
+WUSTL
+Washington University in St. Louis
+WVU
+West Virginia University
+WVUP
+West Virginia University at Parkersburg
+WWC
+Warren Wilson College
+WWU
+Western Washington University
+XU
+Xavier University
+XULA
+Xavier University of Louisiana
+Brigham Young University
+YSU
+Youngstown State University
+YU
+Yeshiva University
+Arizona State University
+Auburn University
+Baylor University
+Binghamton University
+Boston College
+Boston University
+Brandeis University
+Brown University
+California Institute of Technology
+Carnegie Mellon University
+Case Western Reserve University
+Clemson University
+Colorado School of Mines
+Colorado State University
+Columbia University
+Cornell University
+Dartmouth College
+Drexel University
+Duke University
+Emory University
+Florida International University
+Florida State University
+George Mason University
+George Washington University
+Georgetown University
+Georgia Institute of Technology
+Georgia State University
+CUNY
+Harvard University
+Indiana University Bloomington
+Iowa State University
+Johns Hopkins University
+Kansas State University
+Kent State University
+Louisiana State University
+Massachusetts Institute of Technology
+Michigan State University
+Mississippi State University
+Montana State University
+New Jersey Institute of Technology
+New York University
+North Carolina State University
+North Dakota State University
+Northeastern University
+Northwestern University
+Ohio State University
+Ohio University
+Oklahoma State University–Stillwater
+Old Dominion University
+Oregon State University
+Pennsylvania State University
+Princeton University
+Purdue University
+Rensselaer Polytechnic Institute
+Rice University
+Rutgers University–New Brunswick
+Stanford University
+Stony Brook University
+Syracuse University
+Temple University
+Texas A&M University
+Texas Tech University
+Tufts University
+Tulane University
+University at Albany
+SUNY
+University at Buffalo
+University of Alabama
+University of Alabama at Birmingham
+University of Alabama in Huntsville
+University of Arizona
+University of Arkansas
+University of California
+University of Central Florida
+University of Chicago
+University of Cincinnati
+University of Colorado Boulder
+University of Colorado Denver
+University of Connecticut
+University of Delaware
+University of Denver
+University of Florida
+University of Georgia
+University of Hawaii at Manoa
+University of Houston
+University of Illinois Chicago
+University of Illinois Urbana-Champaign
+University of Iowa
+University of Kansas
+University of Kentucky
+University of Louisiana at Lafayette
+University of Louisville
+University of Maine
+University of Maryland
+University of Maryland
+University of Massachusetts Amherst
+University of Memphis
+University of Miami
+University of Michigan
+University of Minnesota
+University of Mississippi
+University of Missouri
+University of Montana
+University of Nebraska–Lincoln
+University of Nevada
+University of Nevada
+University of New Hampshire
+University of New Mexico
+University of North Carolina at Chapel Hill
+University of North Texas
+University of Notre Dame
+University of Oklahoma
+University of Oregon
+University of Pennsylvania
+University of Pittsburgh
+University of Rochester
+University of South Carolina
+University of South Florida
+University of Southern California
+University of Southern Mississippi
+University of Tennessee
+University of Texas at Arlington
+University of Texas at Austin
+University of Texas at Dallas
+University of Texas at El Paso
+University of Texas at San Antonio
+University of Utah
+University of Virginia
+University of Washington
+University of Wisconsin–Madison
+University of Wisconsin–Milwaukee
+Utah State University
+Vanderbilt University
+Virginia Commonwealth University
+Virginia Tech
+Washington State University
+Washington University in St. Louis
+Wayne State University
+West Virginia University
+Yale University
+Air Force Institute of Technology
+American University
+Arizona State University Digital Immersion
+Arkansas State University
+Augusta University
+Azusa Pacific University
+Ball State University
+Boise State University
+Bowling Green State University
+Brigham Young University
+California State University
+Catholic University of America
+Central Michigan University
+Chapman University
+Claremont Graduate University
+Clark Atlanta University
+Clark University
+Clarkson University
+Cleveland State University
+College of William and Mary
+Creighton University
+CUNY City College
+DePaul University
+Duquesne University
+East Carolina University
+East Tennessee State University
+Eastern Michigan University
+Florida Agricultural and Mechanical University
+Florida Atlantic University
+Florida Institute of Technology
+Fordham University
+Georgia Southern University
+Howard University
+Idaho State University
+Illinois Institute of Technology
+Illinois State University
+Indiana University
+Purdue University Indianapolis
+Indiana University of Pennsylvania
+Jackson State University
+James Madison University
+Kennesaw State University
+Lehigh University
+Loma Linda University
+Long Island University
+Louisiana Tech University
+Loyola Marymount University
+Loyola University Chicago
+Marquette University
+Marshall University
+Mercer University
+Miami University
+Michigan Technological University
+Middle Tennessee State University
+Missouri University of Science and Technology
+Montclair State University
+Morgan State University
+New Mexico State University
+North Carolina A & T State University
+Northern Arizona University
+Northern Illinois University
+Nova Southeastern University
+Oakland University
+Portland State University
+Prairie View A&M University
+Rochester Institute of Technology
+Rowan University
+Rutgers University
+Saint Louis University
+Sam Houston State University
+San Diego State University
+San Francisco State University
+Seton Hall University
+South Dakota State University
+Southern Illinois University Carbondale
+Southern Methodist University
+Southern University
+Stevens Institute of Technology
+SUNY College of Environmental Science and Forestry
+Tarleton State University
+Teachers College at Columbia University
+Tennessee State University
+Tennessee Technological University
+Texas A&M University–Corpus Christi
+Texas A&M University–Kingsville
+Texas Christian University
+Texas Southern University
+Texas State University
+The New School
+Thomas Jefferson University
+University of Akron
+University of Alaska Fairbanks
+University of Arkansas at Little Rock
+University of California
+University of Colorado Colorado Springs
+University of Dayton
+University of Idaho
+University of Maryland
+University of Massachusetts Boston
+University of Massachusetts Dartmouth
+University of Massachusetts Lowell
+University of Missouri–Kansas City
+University of Missouri–St. Louis
+University of Nebraska at Omaha
+University of New England
+University of New Orleans
+University of North Carolina at Charlotte
+University of North Carolina at Greensboro
+University of North Carolina Wilmington
+University of North Dakota
+University of North Florida
+University of Puerto Rico
+University of Rhode Island
+University of San Diego
+University of South Alabama
+University of South Dakota
+University of Texas
+University of Texas Rio Grande Valley
+University of Toledo
+University of Tulsa
+University of Vermont
+University of Wyoming
+Villanova University
+Wake Forest University
+West Chester University of Pennsylvania
+Western Michigan University
+Wichita State University
+Worcester Polytechnic Institute
+Wright State University
+Albert Einstein College of Medicine
+Baylor College of Medicine
+Eastern Virginia Medical School
+Icahn School of Medicine at Mount Sinai
+Mayo Clinic College of Medicine and Science
+Medical College of Wisconsin
+Medical University of South Carolina
+Oregon Health & Science University
+Rockefeller University
+Texas Tech University Health Sciences Center
+Uniformed Services University of the Health Sciences
+University of Arkansas for Medical Sciences
+University of California
+University of Maryland
+University of Massachusetts Chan Medical School
+University of Nebraska Medical Center
+University of Oklahoma Health Sciences Center
+University of Tennessee Health Science Center
+University of Texas Health Science Center at Houston
+University of Texas Health Science Center at San Antonio
+University of Texas Medical Branch
+University of Texas Southwestern Medical Center
+Weill Cornell Medicine

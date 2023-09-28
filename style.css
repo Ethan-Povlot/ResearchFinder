@@ -1,0 +1,34 @@
+body {
+    margin: 50%;
+    background-color: #9fe7e7;
+}
+
+.container {
+    max-width: 800px;
+}
+
+.url-entry {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+.url-link {
+    font-size: 1.2rem;
+    margin-right: 1rem;
+}
+
+.url-desc {
+    flex-grow: 1;
+    margin-left: 1rem;
+}
+
+.btn {
+    margin-left: 0.5rem;
+}
+.button-container {
+    margin: 1rem;
+}
