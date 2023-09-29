@@ -17,7 +17,6 @@ from sklearn.metrics.pairwise import cosine_similarity
 from gensim.models import KeyedVectors
 from langdetect import detect
 import pandas as pd
-import swifter
 import logging
 from pybliometrics.scopus import AbstractRetrieval
 from llama_cpp import Llama
@@ -351,13 +350,15 @@ def get_llama_summary(abstract):
     if abstract in llama_cache:
         return llama_cache[abstract]
     try:
-        question = ("Q:Summarize this text: "+abstract+'A:')[:500]#there is a 512 char limit to the 
-        output = LLM(question)["choices"][0]["text"]
-        llama_cache[abstract] = output
-        return output
+        question = f"""
+            Write a concise summary of the text, return a responses covering the key points of the text in a short blurb.
+            ```{abstract}```
+            SUMMARY:"""
+        output = LLM(question, temperature=.8)["choices"][0]["text"]
+        llama_cache[abstract] = output.strip()
+        return "LLAMA 2: "+output
     except:
         return abstract
-
 
 
 ###################################################################################################
@@ -403,7 +404,7 @@ logging.info('starting scoring')
 for name in list(pref_df.columns):
     if '_weight' in name.lower():
         users.append(name[:-7])
-LLM = Llama(model_path=r"llama\llama-2-7b.Q4_K_M.gguf",  n_ctx=2048)
+LLM = Llama(model_path=r"llama\llama-2-7b.Q4_K_M.gguf",  n_ctx=2048, n_threads=4, )
 for user in users:
     output_df[user+'_score'] = output_df['abstract_vec'].apply(get_score, args = [user,pref_df])
     output_df[user+'_score'] = output_df[user+'_score']/output_df['score_divider']#decreases the score of older papers

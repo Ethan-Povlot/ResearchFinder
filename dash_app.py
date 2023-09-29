@@ -7,7 +7,6 @@ from flask import request
 import pandas as pd
 import numpy as np
 from datetime import datetime
-from sklearn.metrics.pairwise import cosine_similarity
 import spacy
 nlp = spacy.load("en_core_web_sm")
 df = pd.read_pickle('last_month.pkl') #de_duped, osf_data
@@ -31,15 +30,6 @@ UNI_LOGO_URL = {
     'GT':r'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Georgia_Tech_seal.svg/1200px-Georgia_Tech_seal.svg.png',
     "None": r'https://upload.wikimedia.org/wikipedia/commons/9/9e/Blank.svg'
 }
-def get_similarity(old, new):#input is output of sentence2vec()for each abstract
-    return cosine_similarity([new], [old])[0][0]
-def get_score(new, user_id):
-    user_id = str(user_id)
-    global pref_df
-    user_pref_df = pref_df[pref_df[user_id+'_weight']!=0]
-    user_pref_df['score'] = user_pref_df['abstract_vec'].apply(get_similarity, args=[new,])
-    user_pref_df['score'] = user_pref_df['score']*user_pref_df[user_id+'_weight']
-    return user_pref_df['score'].sum()
 def get_records_bool(x, uni_lst):
     for name in uni_lst:
         if name in str(x):
@@ -59,7 +49,7 @@ def get_dropdown_options(lst):
             email = name[name.find('@'):]
             if '.edu' in email:
                 email = email[:email.find('.edu')+4]
-            out.append(email)#
+            out.append(email)
         else:
             out.append(name)
 
@@ -162,13 +152,13 @@ app.layout = html.Div([html.Br(),
     }), html.Br(),html.Br(),html.Br(),html.H2(id='show-output', children='',style={"margin-left": "2%"}), html.Br(),html.Br(),
     html.Div([
         html.H2("Area of Interest:",style={"margin-left": "2%"}),
-        dcc.Dropdown(id='area-of-interest-input', options=['All'], value=['All'], placeholder='All available Areas of Interest' , multi=True,style={"margin-left": "1%", "margin-right": "4%"})
+        dcc.Dropdown(id='area-of-interest-input', options=['All'], value=['All'], placeholder='All available Areas of Interest' , multi=True,style={"margin-left": "1%", "margin-right": "3%", })#"margin-left": "2%", "margin-right": "4%"
     ]),
     html.Br(),html.Br(),
     # Search bar for "University"
     html.Div([
         html.H2("University:",style={"margin-left": "2%"}),
-        dcc.Dropdown(id='university-input', options=uni_init_lst, value=['All'], placeholder='All available Universities' ,multi=True,style={"margin-left": "1%", "margin-right": "4%"})
+        dcc.Dropdown(id='university-input', options=uni_init_lst, value=['All'], placeholder='All available Universities' ,multi=True,style={"margin-left": "1%", "margin-right": "3%", })
     ]),
     html.Br(),html.Br(),
     html.Div(
@@ -281,5 +271,5 @@ if __name__ == '__main__':
     #cmd ipconfig them
     #Wireless LAN adapter Wi-Fi:  IPv4 Address. . . . . . . . . . . : 10.91.6.65 so thus is the host
     #host='10.91.6.65',
-        app.run_server(host='10.91.125.61', port='8050', debug=True)
+        app.run_server(host='2610:148:205b:0:64d8:3f0e:146f:e52b', port='8050', debug=True)
 
