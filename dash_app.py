@@ -65,7 +65,6 @@ def get_dropdown_options(lst):
 uni_init_lst = get_dropdown_options(df['affiliations'].values.tolist())#['All']#
 aoi_init_lsr = get_dropdown_options(df['subjects'].values.tolist())#['All']#
 def fetch_data(university, area_of_interest):
-    print(university)
     global df
     try:
         username = request.authorization['username']

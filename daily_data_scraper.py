@@ -163,7 +163,7 @@ def get_lang(x):
         return 'Fail'
     
 
-############################################################# osf ##################################################
+################################################################## osf ##################################################################
 def get_osf(num_days):
     global explored_files
     OSF_token = 'XhAMbzE7SI0KcHYGLgn1oI5EeMqWbtiJuUOTjR1VdLDnF343kgT9OMhTwHiTY5lfd1ma1c'
@@ -218,7 +218,7 @@ def get_osf(num_days):
     return df
 
 
-######################################## arXiv ##########################################
+################################################################## arXiv ##################################################################
 i = 0
 def get_arxiv_catchup_per_subject(soup):
     print('here')
@@ -239,7 +239,6 @@ def get_arxiv_catchup_per_subject(soup):
         entry = [x for x in entry if not 'Comments: ' in x]
         paper_id = entry[0].split(" ")[0]
         if paper_id in explored_files:
-            print('passing')
             continue
         try:
             entry_data = {
@@ -289,7 +288,13 @@ def get_arxiv_days_back(num_back):
     df['url'] = 'https://arxiv.org/abs/'+df['paper_id'].astype(str)
     return df
 
-############################ add scopus and grant scrapers here #################################
+################################################################## grant scrapers here ##################################################################
+
+
+
+
+################################################################## Scopus Scraper ##################################################################
+
 def get_data_per_doi(doi, output_dict):
     ab = AbstractRetrieval(doi, view='FULL')
     output_dict['title'] = ab.title
@@ -354,7 +359,7 @@ def get_scopus(days_back):
     df['source'] = 'Scopus'
     return df
 
-#################################### Bio / Med xiv #################################
+################################################################## Bio / Med xiv ##################################################################
 def info_per_bioarXiv(entry):
     out = {}
     out['source'] = entry['server']
@@ -392,7 +397,7 @@ def get_bioMedxiv(days_back):
 
 
 
-########################################## llama 2 implementation #############################
+################################################################## llama 2 implementation ##################################################################
 llama_cache = {}
 def get_llama_summary(abstract):
     global llama_cache
@@ -410,7 +415,7 @@ def get_llama_summary(abstract):
         return abstract
 
 
-###################################################################################################
+################################################################## Main run section ##################################################################
 df_explored = pd.read_pickle('last_month_wo_llama.pkl')
 explored_files = df_explored[df_explored['score_divider'] <=2]['paper_id'].values.tolist()
 explored_files = dict(zip(explored_files, [None]*len(explored_files)))
@@ -418,19 +423,27 @@ explored_files = dict(zip(explored_files, [None]*len(explored_files)))
 results = []
 threads = []
 num_days = 2 
-print('starting osf')
-logging.info('OSF starting')
-osf_df = get_osf(num_days)
-print('starting arxiv')
-logging.info('arXiv starting')
+# print('starting osf')
+# logging.info('OSF starting')
+# osf_df = get_osf(num_days)
+# print('starting arxiv')
+# logging.info('arXiv starting')
 
-arxiv_df = get_arxiv_days_back(num_days)
-logging.info('arXiv finished')
-scopus_df = get_scopus(num_days)
-logging.info('Scopus finished')
-biomedxiv_df = get_bioMedxiv(num_days)
+# arxiv_df = get_arxiv_days_back(num_days)
+# logging.info('arXiv finished')
+# scopus_df = get_scopus(num_days)
+# logging.info('Scopus finished')
+# biomedxiv_df = get_bioMedxiv(num_days)
+logging.info('multi_thread start')
 
-new_daily_df = pd.concat([arxiv_df, osf_df, scopus_df, biomedxiv_df])
+for func in [get_osf, get_arxiv_days_back, get_scopus,get_bioMedxiv]:
+    thread = threading.Thread(target=lambda f, args: results.append(f(*args)), args=(func, (num_days,)))
+    threads.append(thread)
+    thread.start()
+
+for thread in threads:
+    thread.join()
+new_daily_df = pd.concat(results)
 print('starting combining and scoring')
 
 
