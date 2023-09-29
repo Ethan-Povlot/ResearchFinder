@@ -67,9 +67,16 @@ def download_wait(path_to_downloads=r'c:\Users\ethan\Downloads'):#mostly depreca
                 dl_wait = True
         seconds += 1
     return seconds
-def download_arxiv_old(arxiv_id):#mostly deprecated, just a backup method
+def download_arxiv_old(arxiv_id, source):#mostly deprecated, just a backup method
     driver = webdriver.Chrome()
-    driver.get(f'https://arxiv.org/pdf/{arxiv_id}.pdf')
+    if source == 'arXiv':
+        driver.get(f'https://arxiv.org/pdf/{arxiv_id}.pdf')
+    elif source == 'biorxiv':
+        driver.get(f'https://www.biorxiv.org/content/{arxiv_id}.full.pdf')
+    elif source == 'medrxiv':
+        driver.get(f'https://www.medrxiv.org/content/{arxiv_id}.full.pdf')
+
+    
     keyboard.press_and_release('ctrl + s')
     sleep(1)
     keyboard.write('temp.pdf')
@@ -78,16 +85,23 @@ def download_arxiv_old(arxiv_id):#mostly deprecated, just a backup method
     driver.quit()
     return get_page(r"C:\Users\ethan\Downloads\temp.pdf")
 
-def download_arxiv(arxiv_id):
-    response = requests.get(f'https://arxiv.org/pdf/{arxiv_id}.pdf')
+def download_arxiv(arxiv_id, source = 'arXiv'):
+    i=0
+    while i < 5:
+        if source == 'arXiv':
+            response = requests.get(f'https://arxiv.org/pdf/{arxiv_id}.pdf')
+        elif source == 'biorxiv':
+            response = requests.get(f'https://www.biorxiv.org/content/{arxiv_id}.full.pdf')
+        elif source == 'medrxiv':
+            response = requests.get(f'https://www.medrxiv.org/content/{arxiv_id}.full.pdf')
 
-    if response.status_code == 200:
-        pdf_content = BytesIO(response.content)
-        #pdf_reader = PdfReader(pdf_content)
-        return get_page(pdf_content,reader=True)
-        
+        if response.status_code == 200:
+            pdf_content = BytesIO(response.content)
+            #pdf_reader = PdfReader(pdf_content)
+            return get_page(pdf_content,reader=True)
+        i+=1
     else:
-        return download_arxiv_old(arxiv_id)
+        return download_arxiv_old(arxiv_id, source)
 def osf_download_old(publication_id):
     with open("temp.pdf", "wb") as pdf_file:
         pdf_file.write(requests.get(r'https://osf.io/download/'+publication_id).content)
@@ -224,6 +238,7 @@ def get_arxiv_catchup_per_subject(soup):
         entry = [x for x in entry if not 'Comments: ' in x]
         paper_id = entry[0].split(" ")[0]
         if paper_id in explored_files:
+            print('passing')
             continue
         try:
             entry_data = {
@@ -232,7 +247,7 @@ def get_arxiv_catchup_per_subject(soup):
                 'authors':entry[2].replace("Authors:", '').replace("\n", '').split(', '),
                 'subjects':entry[3].replace("Subjects: ", '').replace("\n", ''),
                 'abstract':entry[4].replace("\n", ''),
-                'affiliations': download_arxiv(paper_id)
+                'affiliations': download_arxiv(paper_id, source='arXiv')
             }
             out.append(entry_data)
             if i%5==0:
@@ -338,7 +353,40 @@ def get_scopus(days_back):
     df['source'] = 'Scopus'
     return df
 
-
+#################################### Bio / Med xiv #################################
+def info_per_bioarXiv(entry):
+    out = {}
+    out['source'] = entry['server']
+    out['date'] = entry['date']
+    out['authors'] = entry['authors']
+    out['title'] = entry['title']
+    out['abstract'] = entry['abstract']
+    out['paper_id'] = entry['doi']
+    out['subjects'] = entry['category']
+    out['affiliation'] = list(set([entry['author_corresponding_institution']]+download_arxiv(out['paper_id'], source=out['source'])))
+    return out
+def get_bioMedxiv(days_back):
+    global explored_files
+    num_read = 0
+    j = 0
+    end_date = datetime.now().strftime('%Y-%m-%d')
+    start_date = (datetime.now()-timedelta(days=days_back)).strftime('%Y-%m-%d')
+    out = []
+    while True:
+        response = requests.get(f'https://api.biorxiv.org/details/biorxiv/{start_date}/{end_date}/{num_read}')
+        json_resp = response.json()['collection']
+        print(len(json_resp))
+        if len(json_resp) ==0:
+            break
+        num_read+=len(json_resp)
+        for entry in json_resp:
+            if j%10==0:
+                print(j)
+            j+=1
+            if entry['doi'] in explored_files:
+                continue
+            out.append(info_per_bioarXiv(entry))
+    return pd.DataFrame.from_records(out)
 
 
 
@@ -376,9 +424,9 @@ arxiv_df = get_arxiv_days_back(2)
 logging.info('arXiv finished')
 scopus_df = get_scopus(2)
 logging.info('Scopus finished')
+biomedxiv_df = get_bioMedxiv(2)
 
-
-new_daily_df = pd.concat([arxiv_df, osf_df, scopus_df])
+new_daily_df = pd.concat([arxiv_df, osf_df, scopus_df, biomedxiv_df])
 print('starting combining and scoring')
 
 
@@ -393,7 +441,7 @@ new_daily_df['score_divider'] =1
 old_df = pd.read_pickle('last_month.pkl')
 old_df['score_divider'] = old_df['score_divider'].astype(int)+1
 
-old_df = old_df[old_df['score_divider']>=30]
+old_df = old_df[old_df['score_divider'].astype(int)<=30]
 
 output_df = pd.concat([old_df, new_daily_df])
 output_df =output_df.drop_duplicates(subset='paper_id')
