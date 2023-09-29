@@ -65,6 +65,7 @@ def get_dropdown_options(lst):
 uni_init_lst = get_dropdown_options(df['affiliations'].values.tolist())#['All']#
 aoi_init_lsr = get_dropdown_options(df['subjects'].values.tolist())#['All']#
 def fetch_data(university, area_of_interest):
+    print(university)
     global df
     try:
         username = request.authorization['username']
@@ -78,7 +79,7 @@ def fetch_data(university, area_of_interest):
     df1 = df.copy()
     if 'Georgia Tech' in university:
         university.append('Georgia Institute of Technology')
-        university.append('@gaetch')
+        university.append('@gatech')
     if 'Emory' in str(university):
         university.append('@emory')
     if not('All' in university):
@@ -90,8 +91,11 @@ def fetch_data(university, area_of_interest):
     global df_searched
     global pref_df
     df_searched = df1.copy()
-    if username != None:
-        df1 = df1.sort_values(by=[username+'_score'], ascending=False).reset_index(drop=True)
+    try:
+        if username != None:
+            df1 = df1.sort_values(by=[username+'_score'], ascending=False).reset_index(drop=True)
+    except:
+        pass
     return df1.head(20).to_dict(orient='records')
 # Function to generate initial layout
 def generate_initial_layout(university=[], area_of_interest=[]):

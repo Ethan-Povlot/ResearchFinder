@@ -1,4 +1,5 @@
 import requests
+import threading
 import pandas as pd
 from datetime import datetime, timedelta
 import re
@@ -414,17 +415,20 @@ df_explored = pd.read_pickle('last_month_wo_llama.pkl')
 explored_files = df_explored[df_explored['score_divider'] <=2]['paper_id'].values.tolist()
 explored_files = dict(zip(explored_files, [None]*len(explored_files)))
 ## add code to check if the file was seen yesterday, if so skip it
+results = []
+threads = []
+num_days = 2 
 print('starting osf')
 logging.info('OSF starting')
-osf_df = get_osf(2)
+osf_df = get_osf(num_days)
 print('starting arxiv')
 logging.info('arXiv starting')
 
-arxiv_df = get_arxiv_days_back(2)
+arxiv_df = get_arxiv_days_back(num_days)
 logging.info('arXiv finished')
-scopus_df = get_scopus(2)
+scopus_df = get_scopus(num_days)
 logging.info('Scopus finished')
-biomedxiv_df = get_bioMedxiv(2)
+biomedxiv_df = get_bioMedxiv(num_days)
 
 new_daily_df = pd.concat([arxiv_df, osf_df, scopus_df, biomedxiv_df])
 print('starting combining and scoring')
