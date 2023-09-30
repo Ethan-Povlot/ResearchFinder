@@ -503,7 +503,6 @@ logging.info('OSF starting')
 results.append(get_osf(num_days))
 print('starting arxiv')
 logging.info('arXiv starting')
-
 results.append(get_arxiv_days_back(num_days))
 logging.info('arXiv finished')
 results.append(get_scopus(num_days))
@@ -519,7 +518,7 @@ logging.info('NIH pubmed finished')
 #     thread = threading.Thread(target=lambda f, args: results.append(f(*args)), args=(func, (num_days,)))
 #     threads.append(thread)
 #     thread.start()
-
+# 
 # for thread in threads:
 #     thread.join()
 new_daily_df = pd.concat(results)
