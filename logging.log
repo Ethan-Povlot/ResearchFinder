@@ -23,15 +23,7 @@ INFO:root:OSF starting
 INFO:root:Starting @ 2023-09-28 12:22
 INFO:root:OSF starting
 INFO:root:arXiv starting
-WARNING:PyPDF2.generic._data_structures:Multiple definitions in dictionary at byte 0x1d902 for key /Rotate
-WARNING:PyPDF2.generic._data_structures:Multiple definitions in dictionary at byte 0x1da14 for key /Rotate
-WARNING:PyPDF2.generic._data_structures:Multiple definitions in dictionary at byte 0x1daf6 for key /Rotate
-WARNING:PyPDF2.generic._data_structures:Multiple definitions in dictionary at byte 0x1dbe8 for key /Rotate
-WARNING:PyPDF2.generic._data_structures:Multiple definitions in dictionary at byte 0x1dcfa for key /Rotate
-WARNING:PyPDF2.generic._data_structures:Multiple definitions in dictionary at byte 0x1ddb4 for key /Rotate
 INFO:root:arXiv finished
-INFO:gensim.models.keyedvectors:loading projection weights from llama\word2vec-google-news-300.bin
-INFO:gensim.utils:KeyedVectors lifecycle event {'msg': 'loaded (3000000, 300) matrix of type float32 from llama\\word2vec-google-news-300.bin', 'binary': True, 'encoding': 'utf8', 'datetime': '2023-09-28T16:01:16.363436', 'gensim': '4.3.2', 'python': '3.11.5 (tags/v3.11.5:cce6ba9, Aug 24 2023, 14:38:34) [MSC v.1936 64 bit (AMD64)]', 'platform': 'Windows-10-10.0.19045-SP0', 'event': 'load_word2vec_format'}
 INFO:root:starting scoring
 INFO:root:Done @ 2023-09-28 16:14
 INFO:root:Starting @ 2023-09-29 08:26
@@ -40,9 +32,10 @@ INFO:root:OSF starting
 INFO:root:arXiv starting
 INFO:root:arXiv finished
 INFO:root:Scopus finished
-INFO:gensim.models.keyedvectors:loading projection weights from llama\word2vec-google-news-300.bin
-INFO:gensim.utils:KeyedVectors lifecycle event {'msg': 'loaded (3000000, 300) matrix of type float32 from llama\\word2vec-google-news-300.bin', 'binary': True, 'encoding': 'utf8', 'datetime': '2023-09-29T10:17:14.234211', 'gensim': '4.3.2', 'python': '3.11.5 (tags/v3.11.5:cce6ba9, Aug 24 2023, 14:38:34) [MSC v.1936 64 bit (AMD64)]', 'platform': 'Windows-10-10.0.19045-SP0', 'event': 'load_word2vec_format'}
 INFO:root:starting scoring
 INFO:root:Done @ 2023-09-29 10:41
 INFO:root:Starting @ 2023-09-29 11:23
-INFO:root:multi_thread start
+INFO:root:multi_thread startINFO:gensim.models.keyedvectors:loading projection weights from llama\word2vec-google-news-300.bin
+INFO:gensim.utils:KeyedVectors lifecycle event {'msg': 'loaded (3000000, 300) matrix of type float32 from llama\\word2vec-google-news-300.bin', 'binary': True, 'encoding': 'utf8', 'datetime': '2023-09-29T17:14:29.411544', 'gensim': '4.3.2', 'python': '3.11.5 (tags/v3.11.5:cce6ba9, Aug 24 2023, 14:38:34) [MSC v.1936 64 bit (AMD64)]', 'platform': 'Windows-10-10.0.19045-SP0', 'event': 'load_word2vec_format'}
+INFO:root:starting scoring
+INFO:root:Done @ 2023-09-29 18:58

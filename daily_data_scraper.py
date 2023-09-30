@@ -17,13 +17,17 @@ import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 from gensim.models import KeyedVectors
 from langdetect import detect
-import pandas as pd
 import logging
 from pybliometrics.scopus import AbstractRetrieval
 from llama_cpp import Llama
+from metapub import PubMedFetcher
+from Bio import Entrez
 logging.basicConfig(filename='logging.log', level=logging.INFO)
 logging.info('Starting @ '+datetime.now().strftime('%Y-%m-%d %H:%M'))
 
+
+Entrez.email = "epovlot8589@gmail.com"
+Entrez.api_key = '8f0801462285bdfc3696dd0c55c09e52cd08'
 
 
 print('starting')
@@ -88,21 +92,26 @@ def download_arxiv_old(arxiv_id, source):#mostly deprecated, just a backup metho
 
 def download_arxiv(arxiv_id, source = 'arXiv'):
     i=0
-    while i < 5:
-        if source == 'arXiv':
-            response = requests.get(f'https://arxiv.org/pdf/{arxiv_id}.pdf')
-        elif source == 'biorxiv':
-            response = requests.get(f'https://www.biorxiv.org/content/{arxiv_id}.full.pdf')
-        elif source == 'medrxiv':
-            response = requests.get(f'https://www.medrxiv.org/content/{arxiv_id}.full.pdf')
+    try:
+        while i < 5:
+            if source == 'arXiv':
+                response = requests.get(f'https://arxiv.org/pdf/{arxiv_id}.pdf')
+            elif source == 'biorxiv':
+                response = requests.get(f'https://www.biorxiv.org/content/{arxiv_id}.full.pdf')
+            elif source == 'medrxiv':
+                response = requests.get(f'https://www.medrxiv.org/content/{arxiv_id}.full.pdf')
 
-        if response.status_code == 200:
-            pdf_content = BytesIO(response.content)
-            #pdf_reader = PdfReader(pdf_content)
-            return get_page(pdf_content,reader=True)
-        i+=1
-    else:
+            if response.status_code == 200:
+                pdf_content = BytesIO(response.content)
+                #pdf_reader = PdfReader(pdf_content)
+                return get_page(pdf_content,reader=True)
+            i+=1
+    except:
+        pass
+    try:
         return download_arxiv_old(arxiv_id, source)
+    except:
+        return None
 def osf_download_old(publication_id):
     with open("temp.pdf", "wb") as pdf_file:
         pdf_file.write(requests.get(r'https://osf.io/download/'+publication_id).content)
@@ -292,6 +301,73 @@ def get_arxiv_days_back(num_back):
 
 
 
+################################################################## NIH pubMed DB ##################################################################
+def get_pubmed(days_back):
+    def pubmed_affiliations(pmid):
+        soup = BeautifulSoup(requests.get(f'https://pubmed.ncbi.nlm.nih.gov/{pmid}/long-authors/').text, 'html.parser')
+        ul_element = soup.find('ul', class_='item-list')
+        li_elements = ul_element.find_all('li')
+        return [li.get_text(strip=True)[1:] for li in li_elements]
+    def process_pubmed_ids(start, end):
+        for i in range(start, end):
+            pubmed_id = pubmed_ids[i]
+            paper_info = process_pubmed_id(pubmed_id)
+            if paper_info != None:
+                out.append(paper_info)
+    def process_pubmed_id(pubmed_id):
+        try:
+            paper_info = {}
+            article = fetch.article_by_pmid(pubmed_id)
+            paper_info['abstract'] = article.abstract
+            paper_info['authors'] = article.authors_str
+            paper_info['title'] = article.title
+            paper_info['subject'] = article.journal
+            paper_info['paper_id'] = article.doi
+            paper_info['date'] = article.history['medline'].strftime('%Y-%m-%d')
+            paper_info['affiliations'] = pubmed_affiliations(pubmed_id)
+            return paper_info
+        except:
+            return
+    days_ago = datetime.now() - timedelta(days=days_back)
+
+    fetch = PubMedFetcher()
+    search_query = f"({days_ago.strftime('%Y/%m/%d')}[Date - Publication] : {datetime.now().strftime('%Y/%m/%d')}[Date - Publication])"
+
+    batch_size = 250
+    start_idx = 0
+    pubmed_ids = []
+    while True:
+        handle = Entrez.esearch(db="pubmed", term=search_query, retmax=batch_size, retstart=start_idx)
+        record = Entrez.read(handle)
+        handle.close()
+        
+        batch_ids = record["IdList"]
+        if not batch_ids:
+            break  # No more results
+        
+        pubmed_ids.extend(batch_ids)
+        start_idx += batch_size
+
+    rate_limit = 10 
+    out = []
+
+    max_threads = len(pubmed_ids) if len(pubmed_ids) < rate_limit else rate_limit
+    batch_size = len(pubmed_ids) // max_threads
+
+    threads = []
+    for i in range(max_threads):
+        start = i * batch_size
+        end = (i + 1) * batch_size if i < max_threads - 1 else len(pubmed_ids)
+        thread = threading.Thread(target=process_pubmed_ids, args=(start, end))
+        thread.start()
+        threads.append(thread)
+
+    for thread in threads:
+        thread.join()
+    out = [i for i in out if i is not None]
+
+    return pd.DataFrame.from_records(out)
+
 
 ################################################################## Scopus Scraper ##################################################################
 
@@ -421,28 +497,31 @@ explored_files = df_explored[df_explored['score_divider'] <=2]['paper_id'].value
 explored_files = dict(zip(explored_files, [None]*len(explored_files)))
 ## add code to check if the file was seen yesterday, if so skip it
 results = []
-threads = []
 num_days = 2 
-# print('starting osf')
-# logging.info('OSF starting')
-# osf_df = get_osf(num_days)
-# print('starting arxiv')
-# logging.info('arXiv starting')
+print('starting osf')
+logging.info('OSF starting')
+results.append(get_osf(num_days))
+print('starting arxiv')
+logging.info('arXiv starting')
 
-# arxiv_df = get_arxiv_days_back(num_days)
-# logging.info('arXiv finished')
-# scopus_df = get_scopus(num_days)
-# logging.info('Scopus finished')
-# biomedxiv_df = get_bioMedxiv(num_days)
-logging.info('multi_thread start')
+results.append(get_arxiv_days_back(num_days))
+logging.info('arXiv finished')
+results.append(get_scopus(num_days))
+logging.info('Scopus finished')
+results.append(get_bioMedxiv(num_days))
+logging.info('biomed finished')
+results.append(get_pubmed(num_days))
+logging.info('NIH pubmed finished')
 
-for func in [get_osf, get_arxiv_days_back, get_scopus,get_bioMedxiv]:
-    thread = threading.Thread(target=lambda f, args: results.append(f(*args)), args=(func, (num_days,)))
-    threads.append(thread)
-    thread.start()
+# threads = []
+# logging.info('multi_thread start')
+# for func in [get_osf, get_arxiv_days_back, get_scopus, get_bioMedxiv, get_pubmed]:
+#     thread = threading.Thread(target=lambda f, args: results.append(f(*args)), args=(func, (num_days,)))
+#     threads.append(thread)
+#     thread.start()
 
-for thread in threads:
-    thread.join()
+# for thread in threads:
+#     thread.join()
 new_daily_df = pd.concat(results)
 print('starting combining and scoring')
 
