@@ -37,7 +37,10 @@ path = r'llama\word2vec-google-news-300.bin'
 
 ################################################# generic functions to explore ####################################################
 def get_similarity(old, new):#input is output of sentence2vec()for each abstract
-    return cosine_similarity([new], [old])[0][0]
+    try:
+        return cosine_similarity([new], [old])[0][0]
+    except:
+        return 0
 def get_score(new, user_id, pref_df):
     user_pref_df = pref_df[pref_df[user_id+'_weight']!=0]
     user_pref_df['score'] = user_pref_df['abstract_vec'].apply(get_similarity, args=[new,])
@@ -256,6 +259,7 @@ def get_arxiv_catchup_per_subject(soup):
                 'authors':entry[2].replace("Authors:", '').replace("\n", '').split(', '),
                 'subjects':entry[3].replace("Subjects: ", '').replace("\n", ''),
                 'abstract':entry[4].replace("\n", ''),
+                'url':f"https://arxiv.org/abs/{paper_id}",
                 'affiliations': download_arxiv(paper_id, source='arXiv')
             }
             out.append(entry_data)
@@ -294,7 +298,6 @@ def get_arxiv_days_back(num_back):
     date = datetime.now()
     for i in range(num_back):
         df = pd.concat([df, get_arxiv_per_day(date-timedelta(days=i))])
-    df['url'] = 'https://arxiv.org/abs/'+df['paper_id'].astype(str)
     return df
 
 ################################################################## grant scrapers here ##################################################################
@@ -304,7 +307,7 @@ def get_arxiv_days_back(num_back):
 ################################################################## NIH pubMed DB ##################################################################
 def get_pubmed(days_back):
     def pubmed_affiliations(pmid):
-        soup = BeautifulSoup(requests.get(f'https://pubmed.ncbi.nlm.nih.gov/{pmid}/long-authors/').text, 'html.parser')
+        soup = BeautifulSoup(requests.get(f'/long-authors/').text, 'html.parser')
         ul_element = soup.find('ul', class_='item-list')
         li_elements = ul_element.find_all('li')
         return [li.get_text(strip=True)[1:] for li in li_elements]
@@ -324,6 +327,7 @@ def get_pubmed(days_back):
             paper_info['subject'] = article.journal
             paper_info['paper_id'] = article.doi
             paper_info['date'] = article.history['medline'].strftime('%Y-%m-%d')
+            paper_info['url'] = f'https://pubmed.ncbi.nlm.nih.gov/{pubmed_id}'
             paper_info['affiliations'] = pubmed_affiliations(pubmed_id)
             return paper_info
         except:
@@ -365,8 +369,9 @@ def get_pubmed(days_back):
     for thread in threads:
         thread.join()
     out = [i for i in out if i is not None]
-
-    return pd.DataFrame.from_records(out)
+    df = pd.DataFrame.from_records(out)
+    df['source'] = 'PubMed NIH'
+    return df
 
 
 ################################################################## Scopus Scraper ##################################################################
@@ -419,7 +424,6 @@ def get_scopus(days_back):
             out.append(paper_dict)
             if datetime.strptime(response_json[i]['prism:coverDate'], '%Y-%m-%d') < datetime.today()-timedelta(days=days_back):
                 dates_back_found = False
-                break
             
         next_dict = response.json()['search-results']['link'][2]
         if next_dict['@ref'] =='next':
@@ -445,7 +449,9 @@ def info_per_bioarXiv(entry):
     out['abstract'] = entry['abstract']
     out['paper_id'] = entry['doi']
     out['subjects'] = entry['category']
-    out['affiliation'] = list(set([entry['author_corresponding_institution']]+download_arxiv(out['paper_id'], source=out['source'])))
+    out['url'] = 'https://www.biorxiv.org/content/'+str(out['paper_id'])
+    
+    out['affiliations'] = list(set([entry['author_corresponding_institution']]+download_arxiv(out['paper_id'], source=out['source'])))
     return out
 def get_bioMedxiv(days_back):
     global explored_files
@@ -469,7 +475,47 @@ def get_bioMedxiv(days_back):
                 continue
             out.append(info_per_bioarXiv(entry))
     return pd.DataFrame.from_records(out)
-
+################################################################## chemrxiv ##################################################################
+def get_chemrxiv(days_back):
+    skip_num = 0
+    total_count=1
+    start_date = (datetime.now()-timedelta(days=days_back)).strftime('%Y-%m-%d')
+    def get_affiliation(x):
+        out = []
+        for affil in x:
+            out.append(affil['name'])
+        return out
+    def get_authors_affils(x):
+        authors = []
+        affiliations = []
+        for name in x:
+            authors.append(name['firstName']+' '+name['lastName'])
+            affiliations.extend(get_affiliation(name['institutions']))
+        return authors, list(set(affiliations))
+    def get_chemrixiv_subjects(x):
+        subjects = []
+        for subj in x:
+            subjects.append(subj['name'])
+        return subjects
+    out = []
+    while skip_num < total_count:
+        response = requests.get(f'https://chemrxiv.org/engage/chemrxiv/public-api/v1/items?limit=50&skip={skip_num}&searchDateFrom={start_date}T00:00:00.000Z')
+        json_resp = response.json()
+        total_count = json_resp['totalCount']
+        skip_num+=len(json_resp['itemHits'])
+        print(skip_num)
+        for paper in json_resp['itemHits']:
+            paper_info = {}
+            paper_info['paper_id'] = paper['item']['id']
+            paper_info['authors'],paper_info['affiliations'] = get_authors_affils(x = paper['item']['authors'])
+            paper_info['subjects'] = get_chemrixiv_subjects(paper['item']['categories'])
+            paper_info['title'] = paper['item']['title']
+            paper_info['abstract'] = paper['item']['abstract']
+            paper_info['url'] = 'https://chemrxiv.org/engage/chemrxiv/article-details/'+str(paper['item']['id'])
+            paper_info['date'] = paper['item']['publishedDate'][:10]
+            paper_info['source'] = paper['item']['origin']
+            out.append(paper_info)
+    return pd.DataFrame.from_records(out)
 
 
 
@@ -511,6 +557,8 @@ results.append(get_bioMedxiv(num_days))
 logging.info('biomed finished')
 results.append(get_pubmed(num_days))
 logging.info('NIH pubmed finished')
+results.append(get_chemrxiv(num_days))
+logging.info('ChemrXiv finished')
 
 # threads = []
 # logging.info('multi_thread start')
