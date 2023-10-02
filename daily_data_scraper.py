@@ -513,7 +513,58 @@ def get_chemrxiv(days_back):
             paper_info['source'] = paper['item']['origin']
             out.append(paper_info)
     return pd.DataFrame.from_records(out)
+############################# National Accademy of Sciences Journal #############################
+def get_pnas_auth_affil_abst(doi):
+    authors = []
+    affiliations = []
+    response = requests.get(f'https://api.crossref.org/works/{doi}')
+    json_resp = response.json()
+    for id in json_resp['message']['author']:
+        name = ""
+        for name_type in ['given', 'faimily']:
+            try:
+                name+=id[name_type]+' '
+            except:
+                pass
+        authors.append(name[:-1])
+        for affil in id['affiliation']:
+            affiliations.append(affil['name'])
+    affiliations = list(set(affiliations))
+    authors = list(set(authors))
+    try:
+        abstract =  BeautifulSoup(json_resp['message']['abstract'], "lxml").text.strip()
+    except:
+        abstract = ""
+    try:
+        subjects = json_resp['message']['subject']
+    except:
+        subjects = ""
+    return authors, affiliations,abstract, subjects
+def get_pnas_per_school(days_back, affiliation):
+    start_date = (datetime.now()-timedelta(days=days_back)).strftime('%Y%m%d')
+    end_date = datetime.now().strftime('%Y%m%d')
+    url = f'https://www.pnas.org/action/showFeed?ui=0&mi=99mbi3&type=search&feed=rss&query=%2526access%253Don%2526content%253DarticlesChapters%2526dateRange%253D%25255B{start_date}%252BTO%252B{end_date}%25255D%2526field1%253DAffiliation%2526target%253Ddefault%2526text1%253D{affiliation}'
 
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, "xml")
+    items = soup.find_all("item")
+    out = []
+    for item in items:
+        paper_info = {}
+        paper_info['paper_id'] = item.find("prism:doi").text
+        paper_info['title']= item.find("dc:title").text
+        paper_info['date']=item.find('prism:coverDisplayDate').text[:10]
+        paper_info['url'] = 'https://www.pnas.org/doi/abs/'+paper_info['paper_id']
+        paper_info['authors'], paper_info['affiliations'], paper_info['abstract'], paper_info['subjects'] = get_pnas_auth_affil_abst(paper_info['paper_id'])
+        out.append(paper_info)
+    df = pd.DataFrame.from_records(out)
+    df['source'] = 'National Academy of Sciences US'
+    return df
+def get_pnas_days_back(num_days):
+    results = []
+    for affil in ['Emory', 'Georgia']:
+        results.append(get_pnas_per_school(num_days, affil))
+    return pd.concat(results)
 
 
 ################################################################## llama 2 implementation ##################################################################
@@ -541,7 +592,7 @@ explored_files = dict(zip(explored_files, [None]*len(explored_files)))
 ## add code to check if the file was seen yesterday, if so skip it
 results = []
 num_days = 2 
-functions = [get_osf, get_arxiv_days_back, get_scopus, get_bioMedxiv, get_pubmed, get_chemrxiv]
+functions = [get_osf, get_arxiv_days_back, get_scopus, get_bioMedxiv, get_pubmed, get_chemrxiv, get_pnas_days_back]
 for func in functions:
     k=0
     finished = False
@@ -552,16 +603,6 @@ for func in functions:
             k+=10
         except:
             k+=1
-
-# threads = []
-# logging.info('multi_thread start')
-# for func in [get_osf, get_arxiv_days_back, get_scopus, get_bioMedxiv, get_pubmed]:
-#     thread = threading.Thread(target=lambda f, args: results.append(f(*args)), args=(func, (num_days,)))
-#     threads.append(thread)
-#     thread.start()
-# 
-# for thread in threads:
-#     thread.join()
 new_daily_df = pd.concat(results)
 print('starting combining and scoring')
 
