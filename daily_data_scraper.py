@@ -250,7 +250,7 @@ def get_arxiv_catchup_per_subject(soup):
             pass
         entry = [x for x in entry if not 'Comments: ' in x]
         paper_id = entry[0].split(" ")[0]
-        if paper_id in explored_files:
+        if paper_id in str(explored_files):
             continue
         try:
             entry_data = {
@@ -335,7 +335,7 @@ def get_pubmed(days_back):
     days_ago = datetime.now() - timedelta(days=days_back)
 
     fetch = PubMedFetcher()
-    search_query = f"({days_ago.strftime('%Y/%m/%d')}[Date - Publication] : {datetime.now().strftime('%Y/%m/%d')}[Date - Publication])"
+    search_query = f"({days_ago.strftime('%Y/%m/%d')}[Date - Entry] : {datetime.now().strftime('%Y/%m/%d')}[Date - Entry])"
 
     batch_size = 250
     start_idx = 0
@@ -416,7 +416,7 @@ def get_scopus(days_back):
         response_json = response.json()['search-results']['entry']
         for i in range(len(response_json)):
             paper_dict = {}
-            paper_dict['paper_id'] = response_json[5]['dc:identifier']
+            paper_dict['paper_id'] = response_json[i]['dc:identifier']
             if paper_dict['paper_id'] in explored_files:
                 continue
             paper_dict['date'] = response_json[i]['prism:coverDate']
@@ -428,9 +428,6 @@ def get_scopus(days_back):
         next_dict = response.json()['search-results']['link'][2]
         if next_dict['@ref'] =='next':
             url = next_dict['@href']
-
-
-
         params = {
             'apiKey':api_key,
             'count': 100,  # You can adjust the number of results per page as needed
@@ -539,26 +536,22 @@ def get_llama_summary(abstract):
 
 ################################################################## Main run section ##################################################################
 df_explored = pd.read_pickle('last_month_wo_llama.pkl')
-explored_files = df_explored[df_explored['score_divider'] <=2]['paper_id'].values.tolist()
+explored_files = df_explored[df_explored['score_divider'] <=2]['paper_id'].values.tolist()#if a paper is for some reason updated then catch it otherwise ignore as we have already indexed it
 explored_files = dict(zip(explored_files, [None]*len(explored_files)))
 ## add code to check if the file was seen yesterday, if so skip it
 results = []
 num_days = 2 
-print('starting osf')
-logging.info('OSF starting')
-results.append(get_osf(num_days))
-print('starting arxiv')
-logging.info('arXiv starting')
-results.append(get_arxiv_days_back(num_days))
-logging.info('arXiv finished')
-results.append(get_scopus(num_days))
-logging.info('Scopus finished')
-results.append(get_bioMedxiv(num_days))
-logging.info('biomed finished')
-results.append(get_pubmed(num_days))
-logging.info('NIH pubmed finished')
-results.append(get_chemrxiv(num_days))
-logging.info('ChemrXiv finished')
+functions = [get_osf, get_arxiv_days_back, get_scopus, get_bioMedxiv, get_pubmed, get_chemrxiv]
+for func in functions:
+    k=0
+    finished = False
+    while k < 5 and not finished:
+        try:
+            results.append(func(num_days))
+            finished = True
+            k+=10
+        except:
+            k+=1
 
 # threads = []
 # logging.info('multi_thread start')
@@ -579,14 +572,14 @@ new_daily_df['language'] = new_daily_df['abstract'].apply(get_lang)
 new_daily_df=new_daily_df[new_daily_df['language'] == 'en']
 model = KeyedVectors.load_word2vec_format(path, binary=True)# here for memory optimization
 new_daily_df['abstract_vec'] = new_daily_df['abstract'].apply(sentence2vec)
-new_daily_df['score_divider'] =1
+new_daily_df['score_divider'] = (pd.Timestamp.today()  -new_daily_df['date'].apply(pd.to_datetime)).dt.days
 #combining the data that is already run with the 
 old_df = pd.read_pickle('last_month.pkl')
-old_df['score_divider'] = old_df['score_divider'].astype(int)+1
+old_df['score_divider'] = (pd.Timestamp.today()  -old_df['date'].apply(pd.to_datetime)).dt.days
 
 old_df = old_df[old_df['score_divider'].astype(int)<=30]
 
-output_df = pd.concat([old_df, new_daily_df])
+output_df = pd.concat([new_daily_df , old_df])
 output_df =output_df.drop_duplicates(subset='paper_id')
 pref_df = pd.read_pickle('user_pref.pkl')
 users =  []
