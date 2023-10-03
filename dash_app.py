@@ -11,7 +11,7 @@ import spacy
 from collections import Counter
 from time import sleep
 from waitress import serve
-
+max_pages = 10
 nlp = spacy.load("en_core_web_sm")
 df = pd.read_pickle('last_month.pkl') #de_duped, osf_data
 pref_df = pd.read_pickle('user_pref.pkl') ##fix this
@@ -60,7 +60,7 @@ def get_dropdown_options(lst):
     return ['All'] + output
 uni_init_lst = get_dropdown_options(df['affiliations'].values.tolist())#['All']#
 aoi_init_lsr = get_dropdown_options(df['subjects'].values.tolist())#['All']#
-def fetch_data(university, area_of_interest):
+def fetch_data(university, area_of_interest, page_num):
     global df
     try:
         username = request.authorization['username']
@@ -90,10 +90,14 @@ def fetch_data(university, area_of_interest):
             df1 = df1.sort_values(by=[username+'_score'], ascending=False).reset_index(drop=True)
     except:
         pass
-    return df1.head(20).to_dict(orient='records')
+    start_index = 20*(page_num-1)
+    end_index = 20*page_num
+    global max_pages
+    max_pages = -(-df1.shape[0] // 20)
+    return df1.iloc[start_index:end_index].to_dict(orient='records')
 # Function to generate initial layout
-def generate_initial_layout(university=[], area_of_interest=[]):
-    data = fetch_data(university, area_of_interest)
+def generate_initial_layout(university=[], area_of_interest=[], page_num=1):
+    data = fetch_data(university, area_of_interest, page_num)
     initial_list = []
     for i, entry in enumerate(data):
         new_entry = html.Div([
@@ -113,7 +117,7 @@ def generate_initial_layout(university=[], area_of_interest=[]):
         initial_list.append(new_entry)
     return initial_list
 
-app = dash.Dash(__name__, external_stylesheets=['https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css'])
+app = dash.Dash(__name__, external_stylesheets=['https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css', 'https://codepen.io/chriddyp/pen/bWLwgP.css'])
 app.title = "Research Finder"
 app._favicon = (r"assets\favicon.ico")
 
@@ -177,6 +181,18 @@ app.layout = html.Div([html.Br(),
         children=generate_initial_layout(),
         className='list-group'
     ),
+    html.Div([
+        dcc.Location(id='url', refresh=False),
+        html.Div(id='page-content'),
+        html.Div(id='page-buttons-container', children=[
+            html.Button('First', id={'type': 'page-button', 'index': 'first'}, style={"backgroundColor": "white", "margin-left": "3%"} ),
+            html.Button('Previous', id={'type': 'page-button', 'index': 'previous'}, style={"backgroundColor": "white"}),
+            dcc.Input(id='page-input', type='number', value=1, debounce=True, max=max_pages, min =0, style={"width": "50px"}),
+            html.Button('Next', id={'type': 'page-button', 'index': 'next'}, style={"backgroundColor": "white"}),
+            html.Button('Last', id={'type': 'page-button', 'index': 'last'}, style={"backgroundColor": "white"}),
+        ])
+    ]),
+
     html.H4("© Ethan Povlot 2023", style={"margin-left": "10%"}),html.Br(),
     # Hidden div to keep track of clicked URLs
     html.Div(id='clicked-urls', style={'display': 'none'}),
@@ -199,10 +215,11 @@ auth = dash_auth.BasicAuth(
 @app.callback(
     Output('url-list', 'children'),
     [Input('university-input', 'value'),
-     Input('area-of-interest-input', 'value')]
+     Input('area-of-interest-input', 'value'),
+     Input('page-input', 'value')]
 )
-def update_url_list(university, area_of_interest):
-    return generate_initial_layout(university, area_of_interest)
+def update_url_list(university, area_of_interest, page_num):
+    return generate_initial_layout(university, area_of_interest, page_num)
 
 
 @app.callback(
@@ -274,7 +291,33 @@ def update_clicked_urls(n_clicks, likes,dislikes, clicked_urls):
                 pref_df.loc[pref_df['paper_id']==str(clicked_paper_id), username+'_dateClicked']=datetime.today().strftime("%Y-%m-%d")
     pref_df.to_pickle('user_pref.pkl')
     return clicked_urls, [None]*len(likes), [None]*len(dislikes)
-
+@app.callback(
+    Output('page-input', 'value'),
+    [Input({'type': 'page-button', 'index': dash.dependencies.ALL}, 'n_clicks'),
+    Input('page-input', 'value')]
+)
+def navigate_to_page(page_buttons_clicks, page_input_value):
+    triggered_button_id = dash.callback_context.triggered[0]['prop_id'].split('.')[0]
+    global max_pages
+    new_page_num = 1
+    if page_input_value == None:
+        page_input_value =1
+    if triggered_button_id == 'page-input':
+        # When the "Go" button is clicked without clicking a page button
+        new_page_num = page_input_value
+    else:
+        # When a page button is clicked
+        current_page_num = page_input_value or 1
+        if '"index":"first"'in triggered_button_id:
+            new_page_num = 1
+        elif '"index":"previous"'in triggered_button_id:
+            new_page_num = max(1, current_page_num - 1)
+        elif '"index":"next"' in triggered_button_id:
+            new_page_num = min(max_pages, current_page_num + 1)
+        elif '"index":"last"' in triggered_button_id:
+            new_page_num = max_pages
+    new_page_num = max(min(new_page_num, max_pages), 1)
+    return new_page_num
 
 
 if __name__ == '__main__':
