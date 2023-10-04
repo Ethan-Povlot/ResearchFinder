@@ -76,10 +76,10 @@ def fetch_data(university, area_of_interest, page_num):
         university.append('@gatech')
     if 'Emory' in str(university):
         university.append('@emory')
-    if not('All' in university):
+    if not ('All' in university):
         df1['temp'] = df1['affiliations'].apply(get_records_bool, args = [university, ])
         df1 = df1[df1['temp']=='True']
-    if not 'All' in area_of_interest:
+    if not ('All' in area_of_interest):
         df1['temp'] = df1['subjects'].apply(get_records_bool, args = [area_of_interest, ])
         df1 = df1[df1['temp']=='True']
     global df_searched
@@ -142,10 +142,10 @@ def update_dropdowns(noop):
     return universitys, areas_of_interest
 app.layout = html.Div([html.Br(),
     html.Img(id ='uni_logo' , style={
-      "height": "10%",
-      "width": "10%",
+      "height": "15%",
+      "width": "15%",
       "object-fit": "contain",
-      "margin-left": '39%',
+      "margin-left": '31%',
       'margin-right':'5px'
     }),
     html.Img(src ='https://upload.wikimedia.org/wikipedia/commons/c/ca/Transparent_X.png?20130727130546' , style={
@@ -155,21 +155,19 @@ app.layout = html.Div([html.Br(),
       "margin-left": "5px"
     }),
     html.Img(src=app.get_asset_url('research_finder_logo.jpg'), style={
-      "height": "10%",
-      "width": "10%",
+      "height": "15%",
+      "width": "15%",
       "object-fit": "contain",
       "margin-left": "5px"
-    }),html.H2(id='show-output', children='',style={"margin-left": "2%"}), html.Br(),
+    }),html.H4(id='show-output', children='',style={"margin-left": "2%"}), 
     
-    
-    # Search bar for "University"
     html.Div([
     html.Div([
-        html.H2("University:", style={"margin-left": "4%"}),
+        html.H4("University:", style={"margin-left": "4%"}),
         dcc.Dropdown(id='university-input', options=uni_init_lst, value=['All'], placeholder='All available Universities', multi=True, style={"margin-left": "2%", "margin-right": "3%"})
     ], style={"display": "inline-block", "width": "45%"}),
     html.Div([
-        html.H2("Area of Interest:", style={"margin-left": "6%"}),
+        html.H4("Area of Interest:", style={"margin-left": "6%"}),
         dcc.Dropdown(id='area-of-interest-input', options=['All'], value=['All'], placeholder='All available Areas of Interest', multi=True, style={"margin-left": "3%", "margin-right": "3%"})
     ], style={"display": "inline-block", "width": "45%"})
 ])
@@ -187,7 +185,7 @@ app.layout = html.Div([html.Br(),
         html.Div(id='page-buttons-container', children=[
             html.Button('First', id={'type': 'page-button', 'index': 'first'}, style={"backgroundColor": "white", "margin-left": "3%"} ),
             html.Button('Previous', id={'type': 'page-button', 'index': 'previous'}, style={"backgroundColor": "white"}),
-            dcc.Input(id='page-input', type='number', value=1, debounce=True, max=max_pages, min =0, style={"width": "50px"}),
+            dcc.Input(id='page-input', type='number', value=1, debounce=True, max=max_pages, min =0, style={"width": "100px"}),
             html.Button('Next', id={'type': 'page-button', 'index': 'next'}, style={"backgroundColor": "white"}),
             html.Button('Last', id={'type': 'page-button', 'index': 'last'}, style={"backgroundColor": "white"}),
         ])
@@ -329,7 +327,7 @@ if __name__ == '__main__':
     #Wireless LAN adapter Wi-Fi:  IPv4 Address. . . . . . . . . . . : 10.91.6.65 so thus is the host
     #host='10.91.6.65',
         app.run_server(host='128.61.105.126', port='80', debug=False)
-#       serve(app, host='10.91.125.61', port=80, url_scheme='https')
+#       serve(app, host='10.91.125.61', port=80, url_scheme='http')
 # add filter for which sources
 # flexible filtering
 # add columns for search dropdowns
