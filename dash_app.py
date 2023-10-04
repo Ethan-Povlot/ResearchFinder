@@ -195,7 +195,7 @@ app.layout = html.Div([html.Br(),
 
     html.H4("© Ethan Povlot 2023", style={"margin-left": "10%"}),html.Br(),
     # Hidden div to keep track of clicked URLs
-    html.Div(id='clicked-urls', style={'display': 'none'}),
+    html.Div(id='clicked-urls', style={'display': 'none'}),dcc.Store(id='previous-value'),
     dcc.Interval(id='interval-component', interval=10, n_intervals=1, max_intervals=1)
     
 ], style={
@@ -212,11 +212,10 @@ auth = dash_auth.BasicAuth(
     app,
     VALID_USERNAME_PASSWORD_PAIRS
 )
+
 @app.callback(
     Output('url-list', 'children'),
-    [Input('university-input', 'value'),
-     Input('area-of-interest-input', 'value'),
-     Input('page-input', 'value')]
+    [Input('university-input', 'value'), Input('area-of-interest-input', 'value'), Input('page-input', 'value')]
 )
 def update_url_list(university, area_of_interest, page_num):
     return generate_initial_layout(university, area_of_interest, page_num)
@@ -291,12 +290,17 @@ def update_clicked_urls(n_clicks, likes,dislikes, clicked_urls):
                 pref_df.loc[pref_df['paper_id']==str(clicked_paper_id), username+'_dateClicked']=datetime.today().strftime("%Y-%m-%d")
     pref_df.to_pickle('user_pref.pkl')
     return clicked_urls, [None]*len(likes), [None]*len(dislikes)
+
+
 @app.callback(
-    Output('page-input', 'value'),
+    [Output('page-input', 'value'),Output('previous-value', 'data')],
     [Input({'type': 'page-button', 'index': dash.dependencies.ALL}, 'n_clicks'),
-    Input('page-input', 'value')]
+    Input('page-input', 'value'),Input('university-input', 'value'), Input('area-of-interest-input', 'value')],
+    [State('previous-value', 'data')]
 )
-def navigate_to_page(page_buttons_clicks, page_input_value):
+def navigate_to_page(page_buttons_clicks, page_input_value,curr1, curr2, old):
+    if str(curr1+curr2) !=old:
+        return 1, str(curr1+curr2)
     triggered_button_id = dash.callback_context.triggered[0]['prop_id'].split('.')[0]
     global max_pages
     new_page_num = 1
@@ -317,7 +321,7 @@ def navigate_to_page(page_buttons_clicks, page_input_value):
         elif '"index":"last"' in triggered_button_id:
             new_page_num = max_pages
     new_page_num = max(min(new_page_num, max_pages), 1)
-    return new_page_num
+    return new_page_num, str(curr1+curr2)
 
 
 if __name__ == '__main__':
