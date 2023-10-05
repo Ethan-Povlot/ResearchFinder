@@ -304,6 +304,86 @@ def get_arxiv_days_back(num_back):
 
 
 
+################################################################## MDPI Scraper ##################################################################
+def get_extra_info_mdpi(url):
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    affiliations = [x.text for x in soup.find_all('div', class_='affiliation-name')]
+    date_txt = soup.find('div', class_ = 'pubhistory').text
+    date = datetime.strptime(date_txt[date_txt.find("Published:")+len('published')+2:].strip(),'%d %B %Y' ).strftime("%Y-%m-%d")
+    authors = [x['content'] for x in  soup.find_all('meta', attrs={'name': 'dc.creator'})][:-1]
+    try:
+        subjects = soup.find('span', itemprop='keywords').text.split('; ')
+    except:
+        subjects = ""
+    return affiliations, authors, date, subjects
+
+def get_mdpi_per_page(divs):
+    out = []
+    for div in divs:
+        paper_info = {}
+        paper_info['abstract'] = div.find('div', class_='abstract-full').text.strip()
+        paper_info['title'] = div.find('a', class_="title-link").text.strip()
+        paper_info['paper_id'] = div.find('a', class_="title-link")['href']
+        
+        paper_info['url'] =  'https://www.mdpi.com'+paper_info['paper_id']
+        paper_info['affiliations'], paper_info['authors'], paper_info['date'], paper_info['subjects'] = get_extra_info_mdpi(paper_info['url'])
+        if paper_info['subjects'] =='':
+                try:
+                    paper_info['subjects'] = div.find('div', class_='belongsTo').text.strip().split(',')
+                except:
+                    paper_info['subjects'] = ""
+        paper_info['source'] = 'MDPI'
+        out.append(paper_info)
+    return out
+
+
+def get_mdpi_days_back(days_back):
+    out = []
+    i = 1
+    while True:
+        response = requests.get(f'https://www.mdpi.com/search?sort=pubdate&page_count=15&page_no={i}')
+        soup = BeautifulSoup(response.text, 'html.parser')
+        out.extend(get_mdpi_per_page(soup.find_all('div', class_='article-content')))
+        if datetime.strptime(out[-1]['date'], '%Y-%m-%d').date() <datetime.now().date()-timedelta(days=days_back):
+            break
+        #print(i*15)
+        i+=1
+    return pd.DataFrame.from_records(out)
+
+################################################################## Nature Scraper ##################################################################
+def get_info_per_article_nature(url):
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    abstract = soup.find('meta', attrs={'name': 'dc.description'})['content']
+    date = soup.find('meta', attrs={'name': 'citation_online_date'})['content'].replace('/', '-')
+    paper_id = soup.find('meta', attrs={'name': 'prism.doi'})['content']
+    authors =[x['content'] for x in soup.find_all('meta', attrs={'name': 'dc.creator'})]
+    subjects =[x['content'] for x in soup.find_all('meta', attrs={'name': 'dc.subject'})]
+    affiliations = list(set([x['content'] for x in soup.find_all('meta', attrs={'name': 'citation_author_institution'})]))
+    return abstract, date, paper_id, authors, subjects, affiliations
+
+def get_nature_per_page(divs):
+    out = []
+    i=0
+    for div in divs:
+        paper_info = {}
+        paper_info['title'] = div.find('a',class_="c-card__link u-link-inherit").text
+        paper_info['url']= 'https://www.nature.com'+div.find('a', class_='c-card__link u-link-inherit')['href']
+        paper_info['abstract'], paper_info['date'], paper_info['paper_id'], paper_info['authors'], paper_info['subjects'], paper_info['affiliations'] = get_info_per_article_nature(paper_info['url'])
+        out.append(paper_info)
+    return out
+
+def get_nature_days_back(days_back):
+    out = []
+    while True:
+        response = requests.get(f'https://www.nature.com/search?order=date_desc&date_range=last_7_days&page={i}&article_type=research')
+        soup = BeautifulSoup(response.text, 'html.parser')
+        out.extend(get_nature_per_page(soup.find_all('div', class_='c-card__body u-display-flex u-flex-direction-column')))
+        if datetime.strptime(out[-1]['date'], '%Y-%m-%d').date() <datetime.now().date()-timedelta(days=days_back):
+            break
+    return pd.DataFrame.from_records(out)
+
 ################################################################## NIH pubMed DB ##################################################################
 def get_pubmed(days_back):
     def pubmed_affiliations(pmid):
@@ -592,7 +672,7 @@ explored_files = dict(zip(explored_files, [None]*len(explored_files)))
 ## add code to check if the file was seen yesterday, if so skip it
 results = []
 num_days = 2 
-functions = [get_osf, get_arxiv_days_back, get_scopus, get_bioMedxiv, get_pubmed, get_chemrxiv, get_pnas_days_back]
+functions = [get_osf, get_arxiv_days_back, get_scopus, get_bioMedxiv, get_pubmed, get_chemrxiv, get_pnas_days_back, get_extra_info_mdpi, get_info_per_article_nature]
 for func in functions:
     k=0
     finished = False

@@ -5,12 +5,16 @@ from dash import html
 from dash.dependencies import Input, Output, State
 from flask import request
 import pandas as pd
+import signal
 import numpy as np
 from datetime import datetime
 import spacy
 from collections import Counter
-from time import sleep
-from waitress import serve
+import logging
+import os
+
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
 max_pages = 10
 nlp = spacy.load("en_core_web_sm")
 df = pd.read_pickle('last_month.pkl') #de_duped, osf_data
@@ -60,12 +64,13 @@ def get_dropdown_options(lst):
     return ['All'] + output
 uni_init_lst = get_dropdown_options(df['affiliations'].values.tolist())#['All']#
 aoi_init_lsr = get_dropdown_options(df['subjects'].values.tolist())#['All']#
-def fetch_data(university, area_of_interest, page_num):
+def fetch_data(university, area_of_interest, page_num, username):
     global df
-    try:
-        username = request.authorization['username']
-    except:
-        username = None
+    if username == None:
+        try:
+            username = request.authorization['username']
+        except:
+            username = None
     if university == None or university == []:
         university = ['All']
     if area_of_interest == None or area_of_interest == []:
@@ -96,8 +101,8 @@ def fetch_data(university, area_of_interest, page_num):
     max_pages = -(-df1.shape[0] // 20)
     return df1.iloc[start_index:end_index].to_dict(orient='records')
 # Function to generate initial layout
-def generate_initial_layout(university=[], area_of_interest=[], page_num=1):
-    data = fetch_data(university, area_of_interest, page_num)
+def generate_initial_layout(university=[], area_of_interest=[], page_num=1, username = None):
+    data = fetch_data(university, area_of_interest, page_num, username)
     initial_list = []
     for i, entry in enumerate(data):
         new_entry = html.Div([
@@ -193,7 +198,7 @@ app.layout = html.Div([html.Br(),
 
     html.H4("© Ethan Povlot 2023", style={"margin-left": "10%"}),html.Br(),
     # Hidden div to keep track of clicked URLs
-    html.Div(id='clicked-urls', style={'display': 'none'}),dcc.Store(id='previous-value'),
+    html.Div(id='clicked-urls', style={'display': 'none'}),dcc.Store(id='previous-value'),dcc.Store(id='username-value'),
     dcc.Interval(id='interval-component', interval=10, n_intervals=1, max_intervals=1)
     
 ], style={
@@ -213,23 +218,23 @@ auth = dash_auth.BasicAuth(
 
 @app.callback(
     Output('url-list', 'children'),
-    [Input('university-input', 'value'), Input('area-of-interest-input', 'value'), Input('page-input', 'value')]
+    [Input('university-input', 'value'), Input('area-of-interest-input', 'value'), Input('page-input', 'value')], State('username-value', 'data')
 )
-def update_url_list(university, area_of_interest, page_num):
-    return generate_initial_layout(university, area_of_interest, page_num)
+def update_url_list(university, area_of_interest, page_num, username):
+    return generate_initial_layout(university, area_of_interest, page_num, username)
 
 
 @app.callback(
-    [Output(component_id='show-output', component_property='children'),Output('university-input', 'value')],
+    [Output(component_id='show-output', component_property='children'),Output('university-input', 'value'), Output('username-value', 'data')],
     [Input('interval-component', 'n_intervals'),]
 )
 def update_output_div(n_clicks):
     logged_username = request.authorization['username']
     if n_clicks:
         user_group_to_name = {'Emory':'Emory University', 'GT':'Georgia Tech'}
-        return '  Hello '+logged_username+', welcome to Research Finder', [user_group_to_name[USER_GROUPS[logged_username]]]
+        return '  Hello '+logged_username+', welcome to Research Finder', [user_group_to_name[USER_GROUPS[logged_username]]], logged_username
     else:
-        return '', ['All']
+        return '', ['All'], None
 
 app.scripts.config.serve_locally = True
 @app.callback(
@@ -238,12 +243,11 @@ app.scripts.config.serve_locally = True
     Input({'type': 'url-link', 'index': dash.dependencies.ALL}, 'n_clicks'),
     Input({'type': 'like-button', 'index': dash.dependencies.ALL}, 'n_clicks'),
     Input({'type': 'dislike-button', 'index': dash.dependencies.ALL}, 'n_clicks'),
-    State('clicked-urls', 'children'),
+    [State('clicked-urls', 'children'),State('username-value', 'data')],
     prevent_initial_call=True
 )
-def update_clicked_urls(n_clicks, likes,dislikes, clicked_urls):
+def update_clicked_urls(n_clicks, likes,dislikes, clicked_urls, username):
     global df_searched
-    username = request.authorization['username']
     global pref_df
     if username == None or username =="":
         return clicked_urls, [None]*len(likes), [None]*len(dislikes)
@@ -320,6 +324,11 @@ def navigate_to_page(page_buttons_clicks, page_input_value,curr1, curr2, old):
             new_page_num = max_pages
     new_page_num = max(min(new_page_num, max_pages), 1)
     return new_page_num, str(curr1+curr2)
+
+   
+@app.server.route('/shutdown', methods=['POST'])
+def shutdown():
+    os.kill(os.getpid(), signal.SIGTERM)
 
 
 if __name__ == '__main__':
