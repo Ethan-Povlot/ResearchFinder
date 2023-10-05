@@ -319,13 +319,15 @@ def get_extra_info_mdpi(url):
     return affiliations, authors, date, subjects
 
 def get_mdpi_per_page(divs):
+    global explored_files
     out = []
     for div in divs:
         paper_info = {}
+        paper_info['paper_id'] = div.find('a', class_="title-link")['href']
+        if paper_info['paper_id'] in explored_files:
+            continue
         paper_info['abstract'] = div.find('div', class_='abstract-full').text.strip()
         paper_info['title'] = div.find('a', class_="title-link").text.strip()
-        paper_info['paper_id'] = div.find('a', class_="title-link")['href']
-        
         paper_info['url'] =  'https://www.mdpi.com'+paper_info['paper_id']
         paper_info['affiliations'], paper_info['authors'], paper_info['date'], paper_info['subjects'] = get_extra_info_mdpi(paper_info['url'])
         if paper_info['subjects'] =='':
@@ -347,7 +349,7 @@ def get_mdpi_days_back(days_back):
         out.extend(get_mdpi_per_page(soup.find_all('div', class_='article-content')))
         if datetime.strptime(out[-1]['date'], '%Y-%m-%d').date() <datetime.now().date()-timedelta(days=days_back):
             break
-        #print(i*15)
+        print(i*15)
         i+=1
     return pd.DataFrame.from_records(out)
 
@@ -376,12 +378,14 @@ def get_nature_per_page(divs):
 
 def get_nature_days_back(days_back):
     out = []
+    i=1
     while True:
         response = requests.get(f'https://www.nature.com/search?order=date_desc&date_range=last_7_days&page={i}&article_type=research')
         soup = BeautifulSoup(response.text, 'html.parser')
         out.extend(get_nature_per_page(soup.find_all('div', class_='c-card__body u-display-flex u-flex-direction-column')))
         if datetime.strptime(out[-1]['date'], '%Y-%m-%d').date() <datetime.now().date()-timedelta(days=days_back):
             break
+        i+=1
     return pd.DataFrame.from_records(out)
 
 ################################################################## NIH pubMed DB ##################################################################
@@ -649,7 +653,7 @@ def get_pnas_days_back(num_days):
 
 ################################################################## llama 2 implementation ##################################################################
 llama_cache = {}
-def get_llama_summary(abstract):
+def get_llama_summary(abstract, LLM):
     global llama_cache
     if abstract in llama_cache:
         return llama_cache[abstract]
@@ -672,22 +676,22 @@ explored_files = dict(zip(explored_files, [None]*len(explored_files)))
 ## add code to check if the file was seen yesterday, if so skip it
 results = []
 num_days = 2 
-functions = [get_osf, get_arxiv_days_back, get_scopus, get_bioMedxiv, get_pubmed, get_chemrxiv, get_pnas_days_back, get_extra_info_mdpi, get_info_per_article_nature]
+functions = [get_mdpi_days_back, get_nature_days_back, get_osf, get_arxiv_days_back, get_scopus, get_bioMedxiv, get_pubmed, get_chemrxiv, get_pnas_days_back]
 for func in functions:
     k=0
     finished = False
     while k < 5 and not finished:
         try:
+            print('trying:'+str(func))
             results.append(func(num_days))
             finished = True
+            print('done: ')
+            print(func)
             k+=10
         except:
             k+=1
 new_daily_df = pd.concat(results)
 print('starting combining and scoring')
-
-
-
 
 new_daily_df['language'] = new_daily_df['abstract'].apply(get_lang)
 new_daily_df=new_daily_df[new_daily_df['language'] == 'en']
@@ -698,12 +702,12 @@ new_daily_df['score_divider'] = (pd.Timestamp.today()  -new_daily_df['date'].app
 old_df = pd.read_pickle('last_month.pkl')
 old_df['score_divider'] = (pd.Timestamp.today()  -old_df['date'].apply(pd.to_datetime)).dt.days
 
-old_df = old_df[old_df['score_divider'].astype(int)<=30]
+#old_df = old_df[old_df['score_divider'].astype(int)<=30]
 
 output_df = pd.concat([new_daily_df , old_df])
 output_df =output_df.drop_duplicates(subset='paper_id')
 pref_df = pd.read_pickle('user_pref.pkl')
-users =  []
+users = []
 logging.info('starting scoring')
 
 for name in list(pref_df.columns):
