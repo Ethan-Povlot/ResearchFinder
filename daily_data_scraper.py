@@ -4,6 +4,7 @@ import pandas as pd
 from datetime import datetime, timedelta
 import re
 import os
+import json
 from io import BytesIO
 import docx
 from PyPDF2 import PdfReader
@@ -446,10 +447,10 @@ def jama_get_days_back(days_back):
 
 
 ######################################################################### AHA Journal #########################################################################
-def get_aha_journal_days_baack(days_back):
+def get_aha_journal_days_back(days_back):
     out = []
     i=0
-    while True:
+    while i< 500:
         url =f'https://www.ahajournals.org/topic/featured/featured-article?sortBy=Earliest&startPage={i}&ContentItemType=research-article&pageSize=100'
         i+=1
         driver = webdriver.Chrome()
@@ -470,7 +471,7 @@ def get_aha_journal_days_baack(days_back):
                 authors = []
                 for auth in div.find_all('span', class_='hlFld-ContribAuthor'):
                     authors.append(auth.text)
-                response = requests.get(f'https://api.crossref.org/works/{doi}')
+                response = requests.get(f'https://api.crossref.org/works/{paper_info["paper_id"]}')
                 json_resp = response.json()
                 affiliations = []
                 for affils in json_resp['message']['author']:
@@ -752,6 +753,97 @@ def get_pnas_days_back(num_days):
     for affil in ['Emory', 'Georgia']:
         results.append(get_pnas_per_school(num_days, affil))
     return pd.concat(results)
+######################################################################### Oxford Academic ########################################################
+def get_oup_extra_data(url):
+    driver = webdriver.Chrome()
+    driver.get(url)
+    html = driver.page_source
+    driver.close()
+    soup=BeautifulSoup(html,'html.parser')
+    try:
+        abstract = soup.find('section', class_='abstract').text
+    except:
+        try:
+            h2_lst = soup.find_all('h2', class_='section-title js-splitscreen-section-title')
+            limited_lst = []
+            for i in range(len((h2_lst))):
+                if 'intro' in h2_lst[i].text.lower() or 'abstract' in h2_lst[i].text.lower():
+                    limited_lst.extend([h2_lst[i]])
+            abstract = ""
+            for a in limited_lst[0].find_next_siblings():
+                if 'section-title js-splitscreen-section-title' in str(a):
+                    break
+                abstract+=a.text+' '
+        except:
+            abstract = ""
+    script_tag = soup.find('script', type='application/ld+json')
+    script_content = script_tag.string
+    data = json.loads(script_content)
+    keywords = data.get("keywords", [])
+    authors = []
+    affiliations = []
+    try:
+        for name in data['author']:
+            authors.append(name['name'])
+            affiliations.append(name['affiliation'])
+        affiliations= list(set(affiliations))
+        authors= list(set(authors))
+    except:
+        try:
+            author_meta_tags = soup.find_all('meta', {'name': 'citation_author'})
+            authors = []
+            for auth in author_meta_tags:
+                authors.append(auth['content'])
+            authors =list(set(authors))
+            institution_meta_tags = soup.find_all('meta', {'name': 'citation_author_institution'})
+            affiliations = []
+            for auth in institution_meta_tags:
+                affiliations.append(auth['content'])
+            affiliations =list(set(affiliations))
+        except:
+            pass
+    return abstract, keywords, authors, affiliations
+
+
+def get_oup_data(div):
+    try:
+        global out
+        paper_info = {}
+        paper_info['title'] = div.find('a', class_='article-link at-sr-article-title-link').text.strip()
+        paper_info['date']=datetime.strptime(div.find('div', class_='sri-date al-pub-date').text.strip().split(': ')[-1],'%d %B %Y' ).strftime("%Y-%m-%d")
+        url = div.find('a', class_="article-link at-sr-article-title-link")['href']
+        paper_info['paper_id']= url[url.find('/doi'):url.find('?search')]
+        paper_info['url'] = 'https://academic.oup.com'+url
+        paper_info['abstract'], paper_info['subjects'], paper_info['authors'], paper_info['affiliations'] =  get_oup_extra_data(paper_info['url'])
+        paper_info['source'] = 'Oxford Academic'
+        out.append(paper_info)
+    except:
+        print('fail')
+        pass
+
+out = []
+def get_oup_days_back(num_days):
+    global out
+    out= []
+    i=1
+    while True:
+        url = f'https://academic.oup.com/journals/search-results?sort=Date+%E2%80%93+Newest+First&f_ContentSubTypeDisplayName=Research+Article&fl_SiteID=5567&page={i}'
+        driver = webdriver.Chrome()
+        driver.get(url)
+        html = driver.page_source
+        driver.close()
+        soup=BeautifulSoup(html,'html.parser')
+        threads = []
+        for div in soup.find_all('div', class_='sr-list al-article-box al-normal clearfix'):
+            thread = threading.Thread(target=get_oup_data, args=(div,))
+            threads.append(thread)
+            thread.start()
+        for thread in threads:
+            thread.join()
+        i+=1
+        if datetime.strptime(out[-1]['date'], '%Y-%m-%d').date() <datetime.now().date()-timedelta(days=num_days):
+            break
+    return pd.DataFrame.from_records(out)
 
 
 ################################################################## llama 2 implementation ##################################################################
@@ -779,7 +871,7 @@ explored_files = dict(zip(explored_files, [None]*len(explored_files)))
 ## add code to check if the file was seen yesterday, if so skip it
 results = []
 num_days = 2 
-functions = [get_mdpi_days_back, get_nature_days_back, get_osf, get_arxiv_days_back, get_scopus, get_bioMedxiv, get_pubmed, get_chemrxiv, get_pnas_days_back, jama_get_days_back, get_aha_journal_days_baack]
+functions = [get_mdpi_days_back, get_nature_days_back, get_osf, get_arxiv_days_back, get_scopus, get_bioMedxiv, get_pubmed, get_chemrxiv, get_pnas_days_back, jama_get_days_back, get_aha_journal_days_back, get_oup_days_back]
 for func in functions:
     k=0
     finished = False
@@ -825,7 +917,7 @@ for user in users:
     llama_df = output_df.iloc[:20]
     else_df = output_df.iloc[20:]
     else_df['llama_abstract'] = else_df['abstract']
-    llama_df['llama_abstract'] =llama_df['abstract'].apply(get_llama_summary)
+    llama_df['llama_abstract'] =llama_df['abstract'].apply(get_llama_summary, args =[LLM,])
     output_df=pd.concat([llama_df, else_df])
 output_df.to_pickle('last_month.pkl')
 print('all saved')
