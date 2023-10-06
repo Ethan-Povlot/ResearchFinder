@@ -611,7 +611,7 @@ def get_pnas_auth_affil_abst(doi):
     json_resp = response.json()
     for id in json_resp['message']['author']:
         name = ""
-        for name_type in ['given', 'faimily']:
+        for name_type in ['given', 'family']:
             try:
                 name+=id[name_type]+' '
             except:
@@ -655,6 +655,107 @@ def get_pnas_days_back(num_days):
     for affil in ['Emory', 'Georgia']:
         results.append(get_pnas_per_school(num_days, affil))
     return pd.concat(results)
+################################################################## JAMA #####################################################################
+last_known_date = datetime.now().strftime('%Y-%m-%d')
+def jama_get_extra_info(doi):
+    global last_known_date
+    response = requests.get(f'https://api.crossref.org/works/{doi}')
+    json_resp = response.json()
+    abstract = BeautifulSoup(json_resp['message']['abstract'],'html.parser').text
+    title = json_resp['message']['title'][0]
+    subjects = json_resp['message']['subject']
+    url = json_resp['message']['link'][0]['URL']
+    try:
+        date = '-'.join(str(item) for item in json_resp['message']['published-print']['date-parts'][0])
+        last_known_date = date
+    except:
+        date = last_known_date
+    source = 'Jama'
+    authors = []
+    affiliations = []
+    for id in json_resp['message']['author']:
+        name = ""
+        for name_type in ['given', 'family']:
+            try:
+                name+=id[name_type]+' '
+            except:
+                pass
+        authors.append(name[:-1])
+        for affil in id['affiliation']:
+            affiliations.append(affil['name'])
+    affiliations = list(set(affiliations))
+    authors = list(set(authors))
+    return abstract, title, subjects, url, date, source, authors, affiliations
+
+def jama_get_days_back(days_back):
+    days_back = 5#find and remove later
+    out = []
+    i=1
+    while True:
+        urlString = f'https://jamanetwork.com/searchresults?sort=Newest&f_ArticleTypeDisplayName=Research&page={i}'
+        i+=1
+        driver = webdriver.Chrome()
+        driver.get(urlString)
+        html = driver.page_source
+        driver.close()
+        soup=BeautifulSoup(html,'html.parser')
+        for cite in soup.find_all('cite', class_ ='article--citation'):
+            paper_info = {}
+            paper_info['doi'] = cite.text.replace('. ', ';').split(';')[-1].strip()
+            try:
+                paper_info['abstract'],paper_info['title'],paper_info['subjects'],paper_info['url'],paper_info['date'],paper_info['source'],paper_info['authors'],paper_info['affiliations'] = jama_get_extra_info(paper_info['doi'])
+            except:
+                continue
+            out.append(paper_info)
+        if len(out)>0:
+            if datetime.strptime(out[-1]['date'], '%Y-%m-%d').date() <datetime.now().date()-timedelta(days=days_back):
+                break
+    return pd.DataFrame.from_records(out)
+
+######################################################################### AHA Journal #########################################################################
+def get_aha_journal_days_baack(days_back):
+    out = []
+    i=0
+    while True:
+        url =f'https://www.ahajournals.org/topic/featured/featured-article?sortBy=Earliest&startPage={i}&ContentItemType=research-article&pageSize=100'
+        i+=1
+        driver = webdriver.Chrome()
+        driver.get(url)
+        html = driver.page_source
+        driver.close()
+        soup=BeautifulSoup(html,'html.parser')
+        divs = soup.find_all('div', class_='col-xs-12')
+
+        for div in divs:   
+            try:
+                paper_info = {}
+                paper_info['abstract'] = div.find('span', class_="hlFld-Abstract").text.replace('            ', '').replace('\n', '')
+                paper_info['title'] = div.find('h3', class_='meta__title meta__title__margin').text.replace('                  ', '').replace('\n', '')
+                paper_info['paper_id'] = div.find('h3', class_='meta__title meta__title__margin').find('a')['href']
+                paper_info['source'] = 'AHA Journal'
+                paper_info['date'] = datetime.strptime(div.find('span', class_='meta__pubDate').text,'%d %B %Y' ).strftime('%Y-%m-%d')
+                authors = []
+                for auth in div.find_all('span', class_='hlFld-ContribAuthor'):
+                    authors.append(auth.text)
+                response = requests.get(f'https://api.crossref.org/works/{doi}')
+                json_resp = response.json()
+                affiliations = []
+                for affils in json_resp['message']['author']:
+                    for affil in affils['affiliation']:
+                        affiliations.append(affil['name'])
+                affiliations = list(set(affiliations))
+                paper_info['authors'] = authors
+                paper_info['affiliations'] = affiliations
+                paper_info['url']= json_resp['message']['URL']
+                paper_info['subjects']=json_resp['message']['subject']
+                out.append(paper_info)
+            except:
+                pass
+        if len(out)>0:
+            print(out[-1]['date'])
+            if datetime.strptime(out[-1]['date'], '%Y-%m-%d').date() <datetime.now().date()-timedelta(days=days_back):
+                break
+    return pd.DataFrame.from_records(out)
 
 
 ######################################################################### LLAMA ##########################################################
