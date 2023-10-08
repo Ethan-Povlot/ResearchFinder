@@ -5,6 +5,8 @@ from dash import html
 from dash.dependencies import Input, Output, State
 from flask import request
 import pandas as pd
+#import modin.pandas as pd
+
 import signal
 import numpy as np
 from datetime import datetime
@@ -12,7 +14,10 @@ import spacy
 from collections import Counter
 import logging
 import os
-
+import dash_daq as daq
+import swifter
+#import ray
+#ray.init(runtime_env={'env_vars': {'__MODIN_AUTOIMPORT_PANDAS__': '1'}})
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
 max_pages = 10
@@ -20,29 +25,29 @@ nlp = spacy.load("en_core_web_sm")
 df = pd.read_pickle('last_month.pkl') #de_duped, osf_data
 pref_df = pd.read_pickle('user_pref.pkl') ##fix this
 df_searched = df.copy()
-VALID_USERNAME_PASSWORD_PAIRS = {
-    'Emory': 'password',
-    'GT':'password',
-    'Harold':'password'
-}
-USER_GROUPS={
-    None:'All',
-    'Emory': 'Emory',
-    'GT':'GT',
-    'Harold':'GT'
-}
+user_info_df = pd.read_csv('user_info.csv')
+VALID_USERNAME_PASSWORD_PAIRS = dict(zip(user_info_df['Username'].values, user_info_df['password'].values))
+USER_GROUPS= dict(zip(user_info_df['Username'].values, user_info_df['User_Group'].values))
+USER_GROUPS[None] = 'All'
+del user_info_df
+
 UNI_LOGO_URL = {
     'Emory':r'https://1000logos.net/wp-content/uploads/2022/06/Emory-University-Logo.png',
     'GT':r'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Georgia_Tech_seal.svg/1200px-Georgia_Tech_seal.svg.png',
     "None": r'https://upload.wikimedia.org/wikipedia/commons/9/9e/Blank.svg'
 }
+
+
 def get_records_bool(x, uni_lst):
     for name in uni_lst:
         if name in str(x):
             return 'True'
     return 'False'
-
+dropdown_cache = {}
 def get_dropdown_options(lst):
+    global dropdown_cache
+    if str(lst) in dropdown_cache:
+        return dropdown_cache[str(lst)]
     uni_lst_temp = [item.strip() for val in lst for item in str(val).replace("[", '').replace("]", '').replace("'", "").replace(";", ',').split(',')]
     flat_list = []
     known_schools = {'@emory.edu', '@gatech.edu', 'Georgia Institute of Technology', 'gatech'}
@@ -60,11 +65,16 @@ def get_dropdown_options(lst):
     counts = Counter(flat_list)
     sorted_counts = sorted(counts.items(), key=lambda x: x[1], reverse=True)
     output = [x[0] for x in sorted_counts]
-
-    return ['All'] + output
-uni_init_lst = get_dropdown_options(df['affiliations'].values.tolist())#['All']#
-aoi_init_lsr = get_dropdown_options(df['subjects'].values.tolist())#['All']#
-def fetch_data(university, area_of_interest, page_num, username):
+    if 'Author to whom correspondence should be addressed' in output:
+        output.remove('Author to whom correspondence should be addressed')
+    if 'Authors to whom correspondence should be addressed' in output:
+        output.remove('Authors to whom correspondence should be addressed')
+    output = ['All']+output
+    dropdown_cache[str(lst)] = output
+    return output
+uni_init_lst = get_dropdown_options(df['affiliations'].values.tolist())[:2000]#['All']#
+aoi_init_lsr = get_dropdown_options(df['subjects'].values.tolist())[:2000]#['All']#
+def fetch_data(university, area_of_interest, page_num, username, toggle_state,and_uni):
     global df
     if username == None:
         try:
@@ -82,11 +92,15 @@ def fetch_data(university, area_of_interest, page_num, username):
     if 'Emory' in str(university):
         university.append('@emory')
     if not ('All' in university):
-        df1['temp'] = df1['affiliations'].apply(get_records_bool, args = [university, ])
+        df1['temp'] = df1['affiliations'].swifter.apply(get_records_bool, args = [university, ])
         df1 = df1[df1['temp']=='True']
     if not ('All' in area_of_interest):
-        df1['temp'] = df1['subjects'].apply(get_records_bool, args = [area_of_interest, ])
+        df1['temp'] = df1['subjects'].swifter.apply(get_records_bool, args = [area_of_interest, ])
         df1 = df1[df1['temp']=='True']
+    if toggle_state:#if advance search on
+        if not ('All' in and_uni):
+            df1['temp'] = df1['affiliations'].swifter.apply(get_records_bool, args = [and_uni, ])
+            df1 = df1[df1['temp']=='True']
     global df_searched
     global pref_df
     df_searched = df1.copy()
@@ -101,8 +115,8 @@ def fetch_data(university, area_of_interest, page_num, username):
     max_pages = -(-df1.shape[0] // 20)
     return df1.iloc[start_index:end_index].to_dict(orient='records')
 # Function to generate initial layout
-def generate_initial_layout(university=[], area_of_interest=[], page_num=1, username = None):
-    data = fetch_data(university, area_of_interest, page_num, username)
+def generate_initial_layout(university=[], area_of_interest=[], page_num=1, username = None, toggle_state =False, and_uni=[]):
+    data = fetch_data(university, area_of_interest, page_num, username,toggle_state,and_uni)
     initial_list = []
     for i, entry in enumerate(data):
         new_entry = html.Div([
@@ -137,14 +151,14 @@ def get_img_url(value):#this both updates the DF on log in just in case
         user = "None"
     return UNI_LOGO_URL[USER_GROUPS[user]]
 @app.callback(
-    [Output('university-input', 'options'),Output('area-of-interest-input', 'options')],
+    [Output('university-input', 'options'),Output('area-of-interest-input', 'options'), Output('and_dropdown', 'options')],
     [Input('url-list', 'children'),]
 )
 def update_dropdowns(noop):
     global df_searched
     universitys = get_dropdown_options(df_searched['affiliations'].values.tolist())
     areas_of_interest = get_dropdown_options(df_searched['subjects'].values.tolist())
-    return universitys, areas_of_interest
+    return universitys[:2000], areas_of_interest[:2000], universitys
 app.layout = html.Div([html.Br(),
     html.Img(id ='uni_logo' , style={
       "height": "15%",
@@ -166,16 +180,29 @@ app.layout = html.Div([html.Br(),
       "margin-left": "5px"
     }),html.H4(id='show-output', children='',style={"margin-left": "2%"}), 
     
-    html.Div([
+   html.Div([
     html.Div([
         html.H4("University:", style={"margin-left": "4%"}),
         dcc.Dropdown(id='university-input', options=uni_init_lst, value=['All'], placeholder='All available Universities', multi=True, style={"margin-left": "2%", "margin-right": "3%"})
-    ], style={"display": "inline-block", "width": "45%"}),
+    ], style={"display": "inline-block", "width": "40%"}),
     html.Div([
         html.H4("Area of Interest:", style={"margin-left": "6%"}),
         dcc.Dropdown(id='area-of-interest-input', options=['All'], value=['All'], placeholder='All available Areas of Interest', multi=True, style={"margin-left": "3%", "margin-right": "3%"})
-    ], style={"display": "inline-block", "width": "45%"})
-])
+    ], style={"display": "inline-block", "width": "40%"}),
+    html.Div([
+        daq.BooleanSwitch(
+            label="Advanced Search",
+            id='toggle-dropdown',
+            color="#21e807",
+            on=False  # Initial state is Off
+        )
+    ], style={"display": "inline-block", "width": "10%"})
+]),
+ html.Div([
+    dcc.Markdown("AND University:",id='advance_txt1', style={"margin-left": "2%", "display": "inline-block", "vertical-align": "middle"}),
+    dcc.Dropdown(id='and_dropdown', options=['All'], value=['All'], multi=True,  style={"margin-left": "3%", "margin-right": "3%", "width": "35%"})
+], style={"display": "inline-block", "width": "35%", "vertical-align": "middle", "margin-left": "2%", "margin-bottom":'2%'})
+
 ,
     
     html.Br(),
@@ -216,12 +243,20 @@ auth = dash_auth.BasicAuth(
     VALID_USERNAME_PASSWORD_PAIRS
 )
 
+
+@app.callback(
+    [Output('and_dropdown', 'style'),Output('advance_txt1', 'style'),],
+    Input('toggle-dropdown', 'on')
+)
+def update_dropdown_visibility(is_open):
+    dropdown_style = {'display': 'block' if is_open else 'none'}
+    return dropdown_style,dropdown_style
 @app.callback(
     Output('url-list', 'children'),
-    [Input('university-input', 'value'), Input('area-of-interest-input', 'value'), Input('page-input', 'value')], State('username-value', 'data')
+    [Input('university-input', 'value'), Input('area-of-interest-input', 'value'), Input('page-input', 'value'), Input('and_dropdown', 'value')], [State('toggle-dropdown', 'on'), State('username-value', 'data')]
 )
-def update_url_list(university, area_of_interest, page_num, username):
-    return generate_initial_layout(university, area_of_interest, page_num, username)
+def update_url_list(university, area_of_interest, page_num, and_uni, toggle_state, username):
+    return generate_initial_layout(university, area_of_interest, page_num, username, toggle_state =toggle_state, and_uni=and_uni)
 
 
 @app.callback(
@@ -232,6 +267,9 @@ def update_output_div(n_clicks):
     logged_username = request.authorization['username']
     if n_clicks:
         user_group_to_name = {'Emory':'Emory University', 'GT':'Georgia Tech'}
+        user_info_df = pd.read_csv('user_info.csv')
+        user_info_df['last_login'] = np.where(user_info_df['Username'] == logged_username, datetime.today().strftime('%Y-%m-%d'), user_info_df['last_login'])
+        user_info_df.to_csv('user_info.csv', index=False)
         return '  Hello '+logged_username+', welcome to Research Finder', [user_group_to_name[USER_GROUPS[logged_username]]], logged_username
     else:
         return '', ['All'], None
@@ -297,12 +335,12 @@ def update_clicked_urls(n_clicks, likes,dislikes, clicked_urls, username):
 @app.callback(
     [Output('page-input', 'value'),Output('previous-value', 'data')],
     [Input({'type': 'page-button', 'index': dash.dependencies.ALL}, 'n_clicks'),
-    Input('page-input', 'value'),Input('university-input', 'value'), Input('area-of-interest-input', 'value')],
+    Input('page-input', 'value'),Input('university-input', 'value'), Input('area-of-interest-input', 'value'), Input('and_dropdown', 'value')],
     [State('previous-value', 'data')]
 )
-def navigate_to_page(page_buttons_clicks, page_input_value,curr1, curr2, old):
-    if str(curr1+curr2) !=old:
-        return 1, str(curr1+curr2)
+def navigate_to_page(page_buttons_clicks, page_input_value,curr1, curr2,curr3, old):
+    if str(curr1+curr2+curr3) !=old:
+        return 1, str(curr1+curr2+curr3)
     triggered_button_id = dash.callback_context.triggered[0]['prop_id'].split('.')[0]
     global max_pages
     new_page_num = 1
@@ -323,7 +361,7 @@ def navigate_to_page(page_buttons_clicks, page_input_value,curr1, curr2, old):
         elif '"index":"last"' in triggered_button_id:
             new_page_num = max_pages
     new_page_num = max(min(new_page_num, max_pages), 1)
-    return new_page_num, str(curr1+curr2)
+    return new_page_num, str(curr1+curr2+curr3)
 
    
 @app.server.route('/shutdown', methods=['POST'])

@@ -57,7 +57,7 @@ def sentenceSimplifier(txt):
         if token.pos_ in ['PROPN', 'VERB','NUM', 'NOUN']:
             out+=token.lemma_+" "
     return out[:-1]
-def sentence2vec(txt):
+def sentence2vec(txt, model):
     simplified_txt = sentenceSimplifier(txt)
     words = simplified_txt.split(" ")
     vecs_arr = np.array([model[word] for word in words if word in model]).sum(axis=0)/len(words)
@@ -860,7 +860,7 @@ def get_llama_summary(abstract, LLM):
             Write a concise summary of the text, return a responses covering the key points of the text in a short blurb.
             ```{abstract}```
             SUMMARY:"""
-        output = LLM(question, temperature=.8)["choices"][0]["text"]
+        output = LLM(question, temperature=.5)["choices"][0]["text"]
         llama_cache[abstract] = output.strip()
         return "LLAMA 2: "+output
     except:

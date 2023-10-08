@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 import re
 import os
 import json
+import xmltodict
 from io import BytesIO
 import docx
 from PyPDF2 import PdfReader
@@ -434,9 +435,9 @@ def jama_get_days_back(days_back):
         soup=BeautifulSoup(html,'html.parser')
         for cite in soup.find_all('cite', class_ ='article--citation'):
             paper_info = {}
-            paper_info['doi'] = cite.text.replace('. ', ';').split(';')[-1].strip()
+            paper_info['paper_id'] = cite.text.replace('. ', ';').split(';')[-1].strip()
             try:
-                paper_info['abstract'],paper_info['title'],paper_info['subjects'],paper_info['url'],paper_info['date'],paper_info['source'],paper_info['authors'],paper_info['affiliations'] = jama_get_extra_info(paper_info['doi'])
+                paper_info['abstract'],paper_info['title'],paper_info['subjects'],paper_info['url'],paper_info['date'],paper_info['source'],paper_info['authors'],paper_info['affiliations'] = jama_get_extra_info(paper_info['paper_id'])
             except:
                 continue
             out.append(paper_info)
@@ -846,6 +847,66 @@ def get_oup_days_back(num_days):
     return pd.DataFrame.from_records(out)
 
 
+################################################################## Lancet Scraper ##################################################################
+
+lancet_rss_feeds = ['https://www.thelancet.com/rssfeed/ebiom_current.xml','https://thelancet.com/rssfeed/eclinm_current.xml', 'https://www.thelancet.com/rssfeed/lancet_current.xml','https://www.thelancet.com/rssfeed/lanrhe_current.xml','https://www.thelancet.com/rssfeed/lanres_current.xml','https://www.thelancet.com/rssfeed/lanwpc_current.xml',
+                    'https://www.thelancet.com/rssfeed/lansea_current.xml','https://www.thelancet.com/rssfeed/lanepe_current.xml','https://www.thelancet.com/rssfeed/lanam_current.xml','https://www.thelancet.com/rssfeed/lanpub_current.xml','https://www.thelancet.com/rssfeed/lanpsy_current.xml','https://www.thelancet.com/rssfeed/lanplh_current.xml',
+                    'https://www.thelancet.com/rssfeed/lanonc_current.xml','https://www.thelancet.com/rssfeed/laneur_current.xml','https://www.thelancet.com/rssfeed/lanmic_current.xml','https://www.thelancet.com/rssfeed/laninf_current.xml','https://www.thelancet.com/rssfeed/lanhl_current.xml','https://www.thelancet.com/rssfeed/lanhiv_current.xml',
+                    'https://www.thelancet.com/rssfeed/lanhae_current.xml','https://www.thelancet.com/rssfeed/langlo_current.xml','https://www.thelancet.com/rssfeed/langas_current.xml','https://www.thelancet.com/rssfeed/landig_current.xml','https://www.thelancet.com/rssfeed/landia_current.xml','https://www.thelancet.com/rssfeed/lanchi_current.xml',
+                    'https://www.thelancet.com/rssfeed/lanrhe_online.xml','https://www.thelancet.com/rssfeed/lanres_online.xml','https://www.thelancet.com/rssfeed/lanwpc_online.xml','https://www.thelancet.com/rssfeed/lansea_online.xml','https://www.thelancet.com/rssfeed/lanepe_online.xml','https://www.thelancet.com/rssfeed/lanam_online.xml',
+                    'https://www.thelancet.com/rssfeed/lanpub_online.xml','https://www.thelancet.com/rssfeed/lanpsy_online.xml','https://www.thelancet.com/rssfeed/lanplh_online.xml','https://www.thelancet.com/rssfeed/lanonc_online.xml','https://www.thelancet.com/rssfeed/lanmic_online.xml','https://www.thelancet.com/rssfeed/laneur_online.xml',
+                    'https://www.thelancet.com/rssfeed/laninf_online.xml','https://www.thelancet.com/rssfeed/lanhiv_online.xml','https://www.thelancet.com/rssfeed/lanhl_online.xml','https://www.thelancet.com/rssfeed/lanhae_online.xml','https://www.thelancet.com/rssfeed/langlo_online.xml','https://www.thelancet.com/rssfeed/langas_online.xml',
+                    'https://www.thelancet.com/rssfeed/landig_online.xml','https://www.thelancet.com/rssfeed/landia_online.xml','https://www.thelancet.com/rssfeed/lanchi_online.xml','https://www.thelancet.com/rssfeed/lancet_online.xml','https://www.thelancet.com/rssfeed/eclinm_online.xml','https://www.thelancet.com/rssfeed/ebiom_online.xml']
+
+
+def get_lancet_info(paper):
+    try:
+        global out
+        global explored_files
+        paper_info = {}
+        paper_info['paper_id'] = str(paper['dc:identifier'])
+        if paper_info['paper_id'] in explored_files:
+            return
+        paper_info['date']= str(paper['dc:date'])
+        paper_info['source'] = str(paper['prism:publicationName'])
+        paper_info['title'] = str(paper['dc:title'])
+        paper_info['abstract'] = paper['description']
+        paper_info['url'] = paper['link'].replace('?rss=yes', '')
+        driver = webdriver.Chrome()
+        driver.get(paper_info['url'])
+        html = driver.page_source
+        driver.close()
+
+        soup=BeautifulSoup(html,'html.parser')
+        authors=[]
+        affiliations = []
+        paper_info['subjects'] = [x.text for x in soup.find_all('ul', class_='rlist keywords-list inline-bullet-list')]
+        for auth in soup.find_all('li', class_='loa__item author'):
+            authors.append(auth.find('a', class_='loa__item__name article-header__info__ctrl loa__item__email').text)
+            affil_lst = auth.find_all('div', class_='article-header__info__group__body')
+            for i in range(len(affil_lst)):
+                affiliations.append(affil_lst[i].text.strip())
+        paper_info['affiliations'] = affiliations
+        paper_info['authors'] = authors
+        explored_files[paper_info['paper_id']] = None
+        out.append(paper_info)
+    except:
+        return
+def get_lanet_full_back():
+    for xml_url in lancet_rss_feeds:
+        threads = []
+        response = requests.get(xml_url)
+        dict_data = xmltodict.parse(response.content)
+        try:
+            for paper in dict_data['rdf:RDF']['item']:
+                thread = threading.Thread(target=get_lancet_info, args=(paper,))
+                threads.append(thread)
+                thread.start()
+            for thread in threads:
+                thread.join()
+        except:
+            print(xml_url)
+    return pd.DataFrame.from_records(out)
 ################################################################## llama 2 implementation ##################################################################
 llama_cache = {}
 def get_llama_summary(abstract, LLM):
@@ -871,7 +932,8 @@ explored_files = dict(zip(explored_files, [None]*len(explored_files)))
 ## add code to check if the file was seen yesterday, if so skip it
 results = []
 num_days = 2 
-functions = [get_mdpi_days_back, get_nature_days_back, get_osf, get_arxiv_days_back, get_scopus, get_bioMedxiv, get_pubmed, get_chemrxiv, get_pnas_days_back, jama_get_days_back, get_aha_journal_days_back, get_oup_days_back]
+functions = [get_mdpi_days_back, get_nature_days_back, get_osf, get_arxiv_days_back, get_scopus, get_bioMedxiv, get_pubmed, get_chemrxiv, get_pnas_days_back,
+              jama_get_days_back, get_aha_journal_days_back, get_oup_days_back, get_lanet_full_back]
 for func in functions:
     k=0
     finished = False
