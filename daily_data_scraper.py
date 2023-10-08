@@ -567,6 +567,7 @@ def get_pubmed(days_back):
 
 def get_data_per_doi(doi, output_dict):
     ab = AbstractRetrieval(doi, view='FULL')
+    output_dict['source'] = 'Springer'
     output_dict['title'] = ab.title
     abstract = ab.abstract
     if not abstract:

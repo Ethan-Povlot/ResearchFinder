@@ -6,7 +6,7 @@ from dash.dependencies import Input, Output, State
 from flask import request
 import pandas as pd
 #import modin.pandas as pd
-
+from string import digits
 import signal
 import numpy as np
 from datetime import datetime
@@ -48,9 +48,9 @@ def get_dropdown_options(lst):
     global dropdown_cache
     if str(lst) in dropdown_cache:
         return dropdown_cache[str(lst)]
-    uni_lst_temp = [item.strip() for val in lst for item in str(val).replace("[", '').replace("]", '').replace("'", "").replace(";", ',').split(',')]
+    uni_lst_temp = [item.strip() for val in lst for item in str(val).replace("[", '').replace("]", '').replace("'", "").replace(";", ',').replace(" and ", ',').split(',')]
     flat_list = []
-    known_schools = {'@emory.edu', '@gatech.edu', 'Georgia Institute of Technology', 'gatech'}
+    known_schools = {'@emory.edu', '@gatech.edu', 'Georgia Institute of Technology', 'gatech', 'Emory University'}
 
     for item in uni_lst_temp:
         if '@' in item:
@@ -61,19 +61,28 @@ def get_dropdown_options(lst):
         
         if item not in ['Central', 'The U', 'nan'] and len(item) > 2 and item not in known_schools:
             flat_list.append(item)
-
+        if item not in known_schools:
+            if 'georgia' in str(item).lower() or 'gatech' in  str(item).lower():
+                flat_list.append('Georgia Tech')
+            if 'emory' in str(item).lower():
+                flat_list.append('Emory University')
     counts = Counter(flat_list)
     sorted_counts = sorted(counts.items(), key=lambda x: x[1], reverse=True)
-    output = [x[0] for x in sorted_counts]
+    output = [x[0].lstrip(digits) for x in sorted_counts]
     if 'Author to whom correspondence should be addressed' in output:
         output.remove('Author to whom correspondence should be addressed')
     if 'Authors to whom correspondence should be addressed' in output:
         output.remove('Authors to whom correspondence should be addressed')
-    output = ['All']+output
+    add_lst = ['All']
+    #if 'Georgia Tech'.lower() in str(output).lower() or 'gatech' in str(output).lower() or 'Georgia Institute of Technology'.lower() in str(output).lower():
+    #    add_lst+=['Georgia Tech']
+    #if 'emory' in str(output).lower():
+    #    add_lst+=['Emory']
+    output = add_lst+output
     dropdown_cache[str(lst)] = output
     return output
-uni_init_lst = get_dropdown_options(df['affiliations'].values.tolist())[:2000]#['All']#
-aoi_init_lsr = get_dropdown_options(df['subjects'].values.tolist())[:2000]#['All']#
+uni_init_lst = get_dropdown_options(df['affiliations'].values.tolist())[:1000]#['All']#
+aoi_init_lsr = get_dropdown_options(df['subjects'].values.tolist())[:1000]#['All']#
 def fetch_data(university, area_of_interest, page_num, username, toggle_state,and_uni):
     global df
     if username == None:
@@ -85,28 +94,28 @@ def fetch_data(university, area_of_interest, page_num, username, toggle_state,an
         university = ['All']
     if area_of_interest == None or area_of_interest == []:
         area_of_interest = ['All']
+    if and_uni == None or and_uni == []:
+        and_uni = ['All']
     df1 = df.copy()
     if 'Georgia Tech' in university:
         university.append('Georgia Institute of Technology')
-        university.append('@gatech')
+        university.append('gatech')
     if 'Emory' in str(university):
-        university.append('@emory')
+        university.append('emory')
     if not ('All' in university):
-        df1['temp'] = df1['affiliations'].swifter.apply(get_records_bool, args = [university, ])
-        df1 = df1[df1['temp']=='True']
+        df1 = df1[df1['affiliations'].astype(str).str.contains('|'.join(university), regex=True,case=False )]
     if not ('All' in area_of_interest):
-        df1['temp'] = df1['subjects'].swifter.apply(get_records_bool, args = [area_of_interest, ])
-        df1 = df1[df1['temp']=='True']
+        df1 = df1[df1['subjects'].astype(str).str.contains('|'.join(area_of_interest), regex=True,case=False )]
     if toggle_state:#if advance search on
         if not ('All' in and_uni):
-            df1['temp'] = df1['affiliations'].swifter.apply(get_records_bool, args = [and_uni, ])
-            df1 = df1[df1['temp']=='True']
+            df1 = df1[df1['affiliations'].astype(str).str.contains('|'.join(and_uni), regex=True,case=False )]
     global df_searched
     global pref_df
     df_searched = df1.copy()
     try:
         if username != None:
             df1 = df1.sort_values(by=[username+'_score'], ascending=False).reset_index(drop=True)
+            df1 = pd.concat([df1[df1['source'].astype(str)!='nan'],df1[df1['source'].astype(str)=='nan']])
     except:
         pass
     start_index = 20*(page_num-1)
@@ -158,7 +167,7 @@ def update_dropdowns(noop):
     global df_searched
     universitys = get_dropdown_options(df_searched['affiliations'].values.tolist())
     areas_of_interest = get_dropdown_options(df_searched['subjects'].values.tolist())
-    return universitys[:2000], areas_of_interest[:2000], universitys
+    return universitys[:1000], areas_of_interest[:100], universitys
 app.layout = html.Div([html.Br(),
     html.Img(id ='uni_logo' , style={
       "height": "15%",
@@ -196,12 +205,12 @@ app.layout = html.Div([html.Br(),
             color="#21e807",
             on=False  # Initial state is Off
         )
-    ], style={"display": "inline-block", "width": "10%"})
+    ], style={"display": "inline-block", "width": "15%","margin-left": "3%"})
 ]),
  html.Div([
-    dcc.Markdown("AND University:",id='advance_txt1', style={"margin-left": "2%", "display": "inline-block", "vertical-align": "middle"}),
-    dcc.Dropdown(id='and_dropdown', options=['All'], value=['All'], multi=True,  style={"margin-left": "3%", "margin-right": "3%", "width": "35%"})
-], style={"display": "inline-block", "width": "35%", "vertical-align": "middle", "margin-left": "2%", "margin-bottom":'2%'})
+    dcc.Markdown("AND University:",id='advance_txt1', style={"margin-left": "2%", "margin-top": "2%","display": "inline-block", "vertical-align": "middle"}),
+    dcc.Dropdown(id='and_dropdown', options=['All'], value=['All'], multi=True,  style={"margin-left": "2%", "margin-right": "3%", "width": "34%"})
+], style={"display": "inline-block", "width": "38%", "vertical-align": "middle", "margin-left": "2%", "margin-bottom":'2%', "margin-top": "1%"})
 
 ,
     
@@ -373,7 +382,7 @@ if __name__ == '__main__':
     #cmd ipconfig them
     #Wireless LAN adapter Wi-Fi:  IPv4 Address. . . . . . . . . . . : 10.91.6.65 so thus is the host
     #host='10.91.6.65',
-        app.run_server(host='128.61.105.126', port='80', debug=False)
+        app.run_server(host='128.61.105.126', port='80', debug=True)
 #       serve(app, host='10.91.125.61', port=80, url_scheme='http')
 # add filter for which sources
 # flexible filtering
