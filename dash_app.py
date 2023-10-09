@@ -14,6 +14,7 @@ import spacy
 from collections import Counter
 import logging
 import os
+import re
 import dash_daq as daq
 import swifter
 #import ray
@@ -40,19 +41,17 @@ UNI_LOGO_URL = {
 
 def get_records_bool(x, uni_lst):
     for name in uni_lst:
-        if name in str(x):
+        if name.lower() in str(x).lower():
             return 'True'
     return 'False'
-dropdown_cache = {}
 def get_dropdown_options(lst):
-    global dropdown_cache
-    if str(lst) in dropdown_cache:
-        return dropdown_cache[str(lst)]
+   
     uni_lst_temp = [item.strip() for val in lst for item in str(val).replace("[", '').replace("]", '').replace("'", "").replace(";", ',').replace(" and ", ',').split(',')]
     flat_list = []
     known_schools = {'@emory.edu', '@gatech.edu', 'Georgia Institute of Technology', 'gatech', 'Emory University'}
 
     for item in uni_lst_temp:
+        item = re.sub(r'\([^)]*\)', '', item).strip()
         if '@' in item:
             item = item.split('@')[1]
             if '.edu' in item:
@@ -67,6 +66,7 @@ def get_dropdown_options(lst):
             if 'emory' in str(item).lower():
                 flat_list.append('Emory University')
     counts = Counter(flat_list)
+    #print(counts.most_common(10))
     sorted_counts = sorted(counts.items(), key=lambda x: x[1], reverse=True)
     output = [x[0].lstrip(digits) for x in sorted_counts]
     if 'Author to whom correspondence should be addressed' in output:
@@ -74,17 +74,14 @@ def get_dropdown_options(lst):
     if 'Authors to whom correspondence should be addressed' in output:
         output.remove('Authors to whom correspondence should be addressed')
     add_lst = ['All']
-    #if 'Georgia Tech'.lower() in str(output).lower() or 'gatech' in str(output).lower() or 'Georgia Institute of Technology'.lower() in str(output).lower():
-    #    add_lst+=['Georgia Tech']
-    #if 'emory' in str(output).lower():
-    #    add_lst+=['Emory']
     output = add_lst+output
-    dropdown_cache[str(lst)] = output
     return output
 uni_init_lst = get_dropdown_options(df['affiliations'].values.tolist())[:1000]#['All']#
 aoi_init_lsr = get_dropdown_options(df['subjects'].values.tolist())[:1000]#['All']#
 def fetch_data(university, area_of_interest, page_num, username, toggle_state,and_uni):
     global df
+    #print(university)
+    #print(area_of_interest)
     if username == None:
         try:
             username = request.authorization['username']
@@ -112,6 +109,7 @@ def fetch_data(university, area_of_interest, page_num, username, toggle_state,an
     global df_searched
     global pref_df
     df_searched = df1.copy()
+    #print(df1.shape[0])
     try:
         if username != None:
             df1 = df1.sort_values(by=[username+'_score'], ascending=False).reset_index(drop=True)
@@ -161,13 +159,25 @@ def get_img_url(value):#this both updates the DF on log in just in case
     return UNI_LOGO_URL[USER_GROUPS[user]]
 @app.callback(
     [Output('university-input', 'options'),Output('area-of-interest-input', 'options'), Output('and_dropdown', 'options')],
-    [Input('url-list', 'children'),]
+    [Input('url-list', 'children'),],[State('university-input', 'value'),State('area-of-interest-input', 'value')]
 )
-def update_dropdowns(noop):
+def update_dropdowns(noop, curr_uni, curr_aoi):
     global df_searched
     universitys = get_dropdown_options(df_searched['affiliations'].values.tolist())
     areas_of_interest = get_dropdown_options(df_searched['subjects'].values.tolist())
-    return universitys[:1000], areas_of_interest[:100], universitys
+    for uni in curr_uni:
+       if uni in universitys:
+           universitys.remove(uni)
+           universitys = [uni]+universitys
+    for aoi in curr_aoi:
+       if aoi in areas_of_interest:
+           areas_of_interest.remove(aoi)
+           areas_of_interest = [aoi]+areas_of_interest
+    if 'All' in curr_uni:
+        universitys = universitys[:1000]
+    if 'All' in curr_aoi:
+        areas_of_interest = areas_of_interest[:1000]
+    return universitys, areas_of_interest, universitys
 app.layout = html.Div([html.Br(),
     html.Img(id ='uni_logo' , style={
       "height": "15%",
@@ -254,12 +264,12 @@ auth = dash_auth.BasicAuth(
 
 
 @app.callback(
-    [Output('and_dropdown', 'style'),Output('advance_txt1', 'style'),],
+    [Output('and_dropdown', 'style'),Output('advance_txt1', 'style'),Output('and_dropdown', 'value')],
     Input('toggle-dropdown', 'on')
 )
 def update_dropdown_visibility(is_open):
     dropdown_style = {'display': 'block' if is_open else 'none'}
-    return dropdown_style,dropdown_style
+    return dropdown_style,dropdown_style, ['All']
 @app.callback(
     Output('url-list', 'children'),
     [Input('university-input', 'value'), Input('area-of-interest-input', 'value'), Input('page-input', 'value'), Input('and_dropdown', 'value')], [State('toggle-dropdown', 'on'), State('username-value', 'data')]
@@ -279,7 +289,11 @@ def update_output_div(n_clicks):
         user_info_df = pd.read_csv('user_info.csv')
         user_info_df['last_login'] = np.where(user_info_df['Username'] == logged_username, datetime.today().strftime('%Y-%m-%d'), user_info_df['last_login'])
         user_info_df.to_csv('user_info.csv', index=False)
-        return '  Hello '+logged_username+', welcome to Research Finder', [user_group_to_name[USER_GROUPS[logged_username]]], logged_username
+        if '@' in logged_username:
+            name = logged_username.split('@')[0]
+        else:
+            name = logged_username
+        return '  Hello '+name+', welcome to Research Finder', [user_group_to_name[USER_GROUPS[logged_username]]], logged_username
     else:
         return '', ['All'], None
 
