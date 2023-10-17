@@ -77,13 +77,24 @@ def get_dropdown_options(lst):
     return output
 uni_init_lst = get_dropdown_options(df['affiliations'].values.tolist())[:1000]#['All']#
 aoi_init_lsr = get_dropdown_options(df['subjects'].values.tolist())[:1000]#['All']#
-def fetch_data(university, area_of_interest, page_num, username, toggle_state,and_uni):
+def fetch_data(university, area_of_interest, page_num, username, toggle_state,and_uni, search_filter, search_txt):
     global df
     if username == None:
         try:
             username = request.authorization['username']
         except:
             username = None
+    text_serarch = True
+    # print('search_filter')
+    # print(search_filter)
+    # print('search_txt')
+
+    # print(search_txt)
+    if search_filter in ['', None]:
+        search_filter = 'All'
+    if search_txt in ['', None]:
+        search_txt = ''
+        text_serarch = False
     if university == None or university == []:
         university = ['All']
     if area_of_interest == None or area_of_interest == []:
@@ -103,8 +114,23 @@ def fetch_data(university, area_of_interest, page_num, username, toggle_state,an
     if toggle_state:#if advance search on
         if not ('All' in and_uni):
             df1 = df1[df1['affiliations'].astype(str).str.contains('|'.join(and_uni), regex=True,case=False )]
+    df_out = pd.DataFrame()
+    if 'authors' in str(search_filter).lower() and text_serarch:
+        df_out=pd.concat([df_out,df1[df1['authors'].astype(str).str.contains(search_txt, case=False)]]) 
+    if 'title' in str(search_filter).lower() and text_serarch:
+        print('here:title')
+        df_out=pd.concat([df_out, df1[df1['title'].astype(str).str.contains(search_txt, case=False)]])
+    if 'abstract' in str(search_filter).lower() and text_serarch:
+        df_out=pd.concat([df_out, df1[df1['abstract'].astype(str).str.contains(search_txt, case=False)]])
+    if 'affiliations' in str(search_filter).lower() and text_serarch:
+        df_out=pd.concat([df_out, df1[df1['affiliations'].astype(str).str.contains(search_txt, case=False)]])
+    if 'subject' in str(search_filter).lower() and text_serarch:
+        df_out=pd.concat([df_out, df1[df1['subjects'].astype(str).str.contains(search_txt, case=False)]])
     global df_searched
     global pref_df
+    if not df_out.empty:
+        df1= df_out.copy()
+        del df_out
     df_searched = df1.copy()
     try:
         if username != None:
@@ -118,8 +144,8 @@ def fetch_data(university, area_of_interest, page_num, username, toggle_state,an
     max_pages = -(-df1.shape[0] // 20)
     return df1.iloc[start_index:end_index].to_dict(orient='records')
 # Function to generate initial layout
-def generate_initial_layout(university=[], area_of_interest=[], page_num=1, username = None, toggle_state =False, and_uni=[]):
-    data = fetch_data(university, area_of_interest, page_num, username,toggle_state,and_uni)
+def generate_initial_layout(university=[], area_of_interest=[], page_num=1, username = None, toggle_state =False, and_uni=[],search_filter=None, search_txt=None ):
+    data = fetch_data(university, area_of_interest, page_num, username,toggle_state,and_uni, search_filter, search_txt)
     initial_list = []
     for i, entry in enumerate(data):
         new_entry = html.Div([
@@ -139,7 +165,7 @@ def generate_initial_layout(university=[], area_of_interest=[], page_num=1, user
         initial_list.append(new_entry)
     return initial_list
 
-app = dash.Dash(__name__, external_stylesheets=['https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css', 'https://codepen.io/chriddyp/pen/bWLwgP.css'])
+app = dash.Dash(__name__, external_stylesheets=['https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css', 'https://codepen.io/chriddyp/pen/bWLwgP.css', r'style.css'])
 app.title = "Research Finder AI"
 app._favicon = (r"assets\favicon.ico")
 
@@ -215,10 +241,22 @@ app.layout = html.Div([html.Br(),
 ]),
  html.Div([
     dcc.Markdown("AND University:",id='advance_txt1', style={"margin-left": "2%", "margin-top": "2%","display": "inline-block", "vertical-align": "middle"}),
-    dcc.Dropdown(id='and_dropdown', options=['All'], value=['All'], multi=True,  style={"margin-left": "2%", "margin-right": "3%", "width": "34%"})
-], style={"display": "inline-block", "width": "38%", "vertical-align": "middle", "margin-left": "2%", "margin-bottom":'2%', "margin-top": "1%"})
-
-,
+    dcc.Dropdown(id='and_dropdown', options=['All'], value=['All'], multi=True,  style={"margin-left": "2%", "margin-right": "3%", "width": "34%"}),
+        html.Div(id='output-container')
+], style={"display": "inline-block", 'width':'38%', "vertical-align": "middle", "margin-left": "2%", "margin-bottom":'2%', "margin-top": "1%"}),
+ html.Div([
+      html.Div([
+        dcc.Dropdown(
+            id='search_dropdown',placeholder='Select filter',
+            options=['abstract', 'title + abstract', 'title', 'authors', 'affiliations','subject'],
+        ),
+        ], style={'width': '200px', "margin-left": "3%"}),
+        dcc.Input(
+            id='search-box',
+            type='text',
+            placeholder='Enter your search query...'
+        ),
+    ], style={'display': 'inline-flex'}),
     
     html.Br(),
     html.Div(
@@ -260,18 +298,19 @@ auth = dash_auth.BasicAuth(
 
 
 @app.callback(
-    [Output('and_dropdown', 'style'),Output('advance_txt1', 'style'),Output('and_dropdown', 'value')],
+    [Output('and_dropdown', 'style'),Output('advance_txt1', 'style'),Output('and_dropdown', 'value'), Output('search_dropdown', 'style'), Output('search-box', 'style'),
+     Output('search-box', 'value'), Output('search_dropdown', 'value')],
     Input('toggle-dropdown', 'on')
 )
 def update_dropdown_visibility(is_open):
     dropdown_style = {'display': 'block' if is_open else 'none'}
-    return dropdown_style,dropdown_style, ['All']
+    return dropdown_style,dropdown_style, ['All'], dropdown_style, dropdown_style, "", ''
 @app.callback(
     Output('url-list', 'children'),
-    [Input('university-input', 'value'), Input('area-of-interest-input', 'value'), Input('page-input', 'value'), Input('and_dropdown', 'value')], [State('toggle-dropdown', 'on'), State('username-value', 'data')]
+    [Input('university-input', 'value'), Input('area-of-interest-input', 'value'), Input('page-input', 'value'), Input('and_dropdown', 'value'),Input('search_dropdown', 'value'),Input('search-box', 'value')], [State('toggle-dropdown', 'on'), State('username-value', 'data')]
 )
-def update_url_list(university, area_of_interest, page_num, and_uni, toggle_state, username):
-    return generate_initial_layout(university, area_of_interest, page_num, username, toggle_state =toggle_state, and_uni=and_uni)
+def update_url_list(university, area_of_interest, page_num, and_uni,search_filter, search_txt, toggle_state, username):
+    return generate_initial_layout(university, area_of_interest, page_num, username, toggle_state =toggle_state, and_uni=and_uni, search_filter=search_filter, search_txt=search_txt)
 
 
 @app.callback(
@@ -354,12 +393,13 @@ def update_clicked_urls(n_clicks, likes,dislikes, clicked_urls, username):
 @app.callback(
     [Output('page-input', 'value'),Output('previous-value', 'data')],
     [Input({'type': 'page-button', 'index': dash.dependencies.ALL}, 'n_clicks'),
-    Input('page-input', 'value'),Input('university-input', 'value'), Input('area-of-interest-input', 'value'), Input('and_dropdown', 'value')],
+    Input('page-input', 'value'),Input('university-input', 'value'), Input('area-of-interest-input', 'value'),
+    Input('and_dropdown', 'value'),Input('search_dropdown', 'value'),Input('search-box', 'value'), ],
     [State('previous-value', 'data')]
 )
-def navigate_to_page(page_buttons_clicks, page_input_value,curr1, curr2,curr3, old):
-    if str(curr1+curr2+curr3) !=old:
-        return 1, str(curr1+curr2+curr3)
+def navigate_to_page(page_buttons_clicks, page_input_value,curr1, curr2,curr3, curr4, curr5, old):
+    if str(str(curr1)+str(curr2)+str(curr3)+str(curr4)+str(curr5)) !=old:
+        return 1, str(str(curr1)+str(curr2)+str(curr3)+str(curr4)+str(curr5))
     triggered_button_id = dash.callback_context.triggered[0]['prop_id'].split('.')[0]
     global max_pages
     new_page_num = 1
@@ -380,7 +420,7 @@ def navigate_to_page(page_buttons_clicks, page_input_value,curr1, curr2,curr3, o
         elif '"index":"last"' in triggered_button_id:
             new_page_num = max_pages
     new_page_num = max(min(new_page_num, max_pages), 1)
-    return new_page_num, str(curr1+curr2+curr3)
+    return new_page_num, str(str(curr1)+str(curr2)+str(curr3)+str(curr4)+str(curr5))
 
    
 @app.server.route('/shutdown', methods=['POST'])
@@ -392,7 +432,7 @@ if __name__ == '__main__':
     #cmd ipconfig them
     #Wireless LAN adapter Wi-Fi:  IPv4 Address. . . . . . . . . . . : 10.91.6.65 so thus is the host
     #host='10.91.6.65',
-        app.run_server(host='128.61.105.126', port='80', debug=False)
+        app.run_server(host='128.61.105.126', port='80', debug=True)
 #       serve(app, host='10.91.125.61', port=80, url_scheme='http')
 # add filter for which sources
 # flexible filtering
