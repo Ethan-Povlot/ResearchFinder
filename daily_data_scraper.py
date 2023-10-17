@@ -100,7 +100,7 @@ def download_arxiv(arxiv_id, source = 'arXiv'):
     try:
         while i < 5:
             if source == 'arXiv':
-                response = requests.get(f'https://arxiv.org/pdf/{arxiv_id}.pdf')
+                response = requests.get(f'https://export.arxiv.org/pdf/{arxiv_id}.pdf')
             elif source == 'biorxiv':
                 response = requests.get(f'https://www.biorxiv.org/content/{arxiv_id}.full.pdf')
             elif source == 'medrxiv':
@@ -261,7 +261,7 @@ def get_arxiv_catchup_per_subject(soup):
                 'authors':entry[2].replace("Authors:", '').replace("\n", '').split(', '),
                 'subjects':entry[3].replace("Subjects: ", '').replace("\n", ''),
                 'abstract':entry[4].replace("\n", ''),
-                'url':f"https://arxiv.org/abs/{paper_id}",
+                'url':f"https://export.arxiv.org/abs/{paper_id}",
                 'affiliations': download_arxiv(paper_id, source='arXiv')
             }
             out.append(entry_data)
@@ -275,7 +275,7 @@ def get_arxiv_catchup_per_subject(soup):
 def get_arxiv_per_day(date):
     out = []
     for subject in ['q-fin', 'cs', 'math', 'q-bio', 'hep-th', 'stat', 'econ', 'eess']: 
-        url = f"https://arxiv.org/catchup?smonth={str(date.month)}&group=grp_&sday={str(date.day)}&archive={subject}&method=with&syear={str(date.year)}"
+        url = f"https://export.arxiv.org/catchup?smonth={str(date.month)}&group=grp_&sday={str(date.day)}&archive={subject}&method=with&syear={str(date.year)}"
         print(url)
         j = 0
         success = False

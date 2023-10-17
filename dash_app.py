@@ -66,7 +66,6 @@ def get_dropdown_options(lst):
             if 'emory' in str(item).lower():
                 flat_list.append('Emory University')
     counts = Counter(flat_list)
-    #print(counts.most_common(10))
     sorted_counts = sorted(counts.items(), key=lambda x: x[1], reverse=True)
     output = [x[0].lstrip(digits) for x in sorted_counts]
     if 'Author to whom correspondence should be addressed' in output:
@@ -80,8 +79,6 @@ uni_init_lst = get_dropdown_options(df['affiliations'].values.tolist())[:1000]#[
 aoi_init_lsr = get_dropdown_options(df['subjects'].values.tolist())[:1000]#['All']#
 def fetch_data(university, area_of_interest, page_num, username, toggle_state,and_uni):
     global df
-    #print(university)
-    #print(area_of_interest)
     if username == None:
         try:
             username = request.authorization['username']
@@ -109,7 +106,6 @@ def fetch_data(university, area_of_interest, page_num, username, toggle_state,an
     global df_searched
     global pref_df
     df_searched = df1.copy()
-    #print(df1.shape[0])
     try:
         if username != None:
             df1 = df1.sort_values(by=[username+'_score'], ascending=False).reset_index(drop=True)
@@ -144,7 +140,7 @@ def generate_initial_layout(university=[], area_of_interest=[], page_num=1, user
     return initial_list
 
 app = dash.Dash(__name__, external_stylesheets=['https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css', 'https://codepen.io/chriddyp/pen/bWLwgP.css'])
-app.title = "Research Finder"
+app.title = "Research Finder AI"
 app._favicon = (r"assets\favicon.ico")
 
 @app.callback(
@@ -166,13 +162,13 @@ def update_dropdowns(noop, curr_uni, curr_aoi):
     universitys = get_dropdown_options(df_searched['affiliations'].values.tolist())
     areas_of_interest = get_dropdown_options(df_searched['subjects'].values.tolist())
     for uni in curr_uni:
-       if uni in universitys:
+        if uni in universitys:
            universitys.remove(uni)
-           universitys = [uni]+universitys
+        universitys = [uni]+universitys
     for aoi in curr_aoi:
-       if aoi in areas_of_interest:
+        if aoi in areas_of_interest:
            areas_of_interest.remove(aoi)
-           areas_of_interest = [aoi]+areas_of_interest
+        areas_of_interest = [aoi]+areas_of_interest
     if 'All' in curr_uni:
         universitys = universitys[:1000]
     if 'All' in curr_aoi:
@@ -192,7 +188,7 @@ app.layout = html.Div([html.Br(),
       "object-fit": "contain",
       "margin-left": "5px"
     }),
-    html.Img(src=app.get_asset_url('research_finder_logo.jpg'), style={
+    html.Img(src=app.get_asset_url('research_finder_ai_1_logo.jpg'), style={
       "height": "15%",
       "width": "15%",
       "object-fit": "contain",
@@ -210,7 +206,7 @@ app.layout = html.Div([html.Br(),
     ], style={"display": "inline-block", "width": "40%"}),
     html.Div([
         daq.BooleanSwitch(
-            label="Advanced Search",
+            label="Advanced Search",style={"fontSize": "204px"},
             id='toggle-dropdown',
             color="#21e807",
             on=False  # Initial state is Off
@@ -248,7 +244,7 @@ app.layout = html.Div([html.Br(),
     dcc.Interval(id='interval-component', interval=10, n_intervals=1, max_intervals=1)
     
 ], style={
-    'backgroundColor': '#9fe7e7',
+    'backgroundColor': '#D3D3D3',
     'position': 'absolute',
     'top': 0,
     'left': 0,
@@ -293,7 +289,7 @@ def update_output_div(n_clicks):
             name = logged_username.split('@')[0]
         else:
             name = logged_username
-        return '  Hello '+name+', welcome to Research Finder', [user_group_to_name[USER_GROUPS[logged_username]]], logged_username
+        return '  Hello '+name+', welcome to Research Finder AI', [user_group_to_name[USER_GROUPS[logged_username]]], logged_username
     else:
         return '', ['All'], None
 
@@ -396,7 +392,7 @@ if __name__ == '__main__':
     #cmd ipconfig them
     #Wireless LAN adapter Wi-Fi:  IPv4 Address. . . . . . . . . . . : 10.91.6.65 so thus is the host
     #host='10.91.6.65',
-        app.run_server(host='128.61.105.126', port='80', debug=True)
+        app.run_server(host='128.61.105.126', port='80', debug=False)
 #       serve(app, host='10.91.125.61', port=80, url_scheme='http')
 # add filter for which sources
 # flexible filtering
