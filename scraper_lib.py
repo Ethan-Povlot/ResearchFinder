@@ -47,8 +47,7 @@ def get_similarity(old, new):#input is output of sentence2vec()for each abstract
         return 0
 def get_score(new, user_id, pref_df):
     user_pref_df = pref_df[pref_df[user_id+'_weight']!=0]
-    user_pref_df['score'] = user_pref_df['abstract_vec'].apply(get_similarity, args=[new,])
-    user_pref_df['score'] = user_pref_df['score']*user_pref_df[user_id+'_weight']
+    user_pref_df['score'] = user_pref_df['abstract_vec'].apply(get_similarity, args=[new,])*user_pref_df[user_id+'_weight']
     return user_pref_df['score'].sum()
 def sentenceSimplifier(txt): 
     doc = nlp(txt)

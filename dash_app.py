@@ -88,8 +88,9 @@ def fetch_data(university, area_of_interest, page_num, username, toggle_state,an
     # print('search_filter')
     # print(search_filter)
     # print('search_txt')
-
-    # print(search_txt)
+    if search_filter == '' or search_filter == None:
+        search_filter = 'authors+title+abstract+affiliations+subject'#this means if no filter query all
+    # print(search_filter)
     if search_filter in ['', None]:
         search_filter = 'All'
     if search_txt in ['', None]:
@@ -115,20 +116,25 @@ def fetch_data(university, area_of_interest, page_num, username, toggle_state,an
         if not ('All' in and_uni):
             df1 = df1[df1['affiliations'].astype(str).str.contains('|'.join(and_uni), regex=True,case=False )]
     df_out = pd.DataFrame()
+    trys = 0
     if 'authors' in str(search_filter).lower() and text_serarch:
         df_out=pd.concat([df_out,df1[df1['authors'].astype(str).str.contains(search_txt, case=False)]]) 
+        trys+=1
     if 'title' in str(search_filter).lower() and text_serarch:
-        print('here:title')
         df_out=pd.concat([df_out, df1[df1['title'].astype(str).str.contains(search_txt, case=False)]])
+        trys+=1
     if 'abstract' in str(search_filter).lower() and text_serarch:
         df_out=pd.concat([df_out, df1[df1['abstract'].astype(str).str.contains(search_txt, case=False)]])
+        trys+=1
     if 'affiliations' in str(search_filter).lower() and text_serarch:
         df_out=pd.concat([df_out, df1[df1['affiliations'].astype(str).str.contains(search_txt, case=False)]])
+        trys+=1
     if 'subject' in str(search_filter).lower() and text_serarch:
         df_out=pd.concat([df_out, df1[df1['subjects'].astype(str).str.contains(search_txt, case=False)]])
+        trys+=1
     global df_searched
     global pref_df
-    if not df_out.empty:
+    if trys!=0:
         df1= df_out.copy()
         del df_out
     df_searched = df1.copy()
@@ -214,7 +220,7 @@ app.layout = html.Div([html.Br(),
       "object-fit": "contain",
       "margin-left": "5px"
     }),
-    html.Img(src=app.get_asset_url('research_finder_ai_1_logo.jpg'), style={
+    html.Img(src=app.get_asset_url('research_finder_ai_logo.jpg'), style={
       "height": "15%",
       "width": "15%",
       "object-fit": "contain",
@@ -432,7 +438,7 @@ if __name__ == '__main__':
     #cmd ipconfig them
     #Wireless LAN adapter Wi-Fi:  IPv4 Address. . . . . . . . . . . : 10.91.6.65 so thus is the host
     #host='10.91.6.65',
-        app.run_server(host='128.61.105.126', port='80', debug=True)
+        app.run_server(host='128.61.105.126', port='80', debug=False)
 #       serve(app, host='10.91.125.61', port=80, url_scheme='http')
 # add filter for which sources
 # flexible filtering

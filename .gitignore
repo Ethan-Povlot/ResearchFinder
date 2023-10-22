@@ -1,5 +1,3 @@
-
-llama/llama-2-7b.Q4_K_M.gguf
 *.gguf
 *.bin
 *.gz
