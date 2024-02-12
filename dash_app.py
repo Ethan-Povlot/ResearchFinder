@@ -23,7 +23,7 @@ log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
 max_pages = 10
 nlp = spacy.load("en_core_web_sm")
-df = pd.read_pickle('last_month.pkl') #de_duped, osf_data
+df = pd.read_pickle(r'C:\Users\ethan\Documents\ResearchFinder\last_month_wo_llama.pkl') #de_duped, osf_data
 pref_df = pd.read_pickle('user_pref.pkl') ##fix this
 df_searched = df.copy()
 user_info_df = pd.read_csv('user_info.csv')

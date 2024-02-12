@@ -19,11 +19,11 @@ start "PNAS Scraper 11" "C:/Users/ethan/AppData/Local/Programs/Python/Python311/
 timeout /t 3
 start "ChemrXiv Scraper 12" "C:/Users/ethan/AppData/Local/Programs/Python/Python311/python.exe" "C:\Users\ethan\Documents\ResearchFinder\chemrxiv_daily_scraper.py"
 
-"C:/Users/ethan/AppData/Local/Programs/Python/Python311/python.exe" "C:\Users\ethan\Documents\ResearchFinder\lancet_daily_scraper.py"
 "C:/Users/ethan/AppData/Local/Programs/Python/Python311/python.exe" "C:\Users\ethan\Documents\ResearchFinder\aha_daily_scraper.py"
 "C:/Users/ethan/AppData/Local/Programs/Python/Python311/python.exe" "C:\Users\ethan\Documents\ResearchFinder\jama_daily_scraper.py"
 "C:/Users/ethan/AppData/Local/Programs/Python/Python311/python.exe" "C:\Users\ethan\Documents\ResearchFinder\nature_daily_scraper.py"
 "C:/Users/ethan/AppData/Local/Programs/Python/Python311/python.exe" "C:\Users\ethan\Documents\ResearchFinder\osf_daily_scraper.py"
 "C:/Users/ethan/AppData/Local/Programs/Python/Python311/python.exe" "C:\Users\ethan\Documents\ResearchFinder\mdpi_daily_scraper.py"
+"C:/Users/ethan/AppData/Local/Programs/Python/Python311/python.exe" "C:\Users\ethan\Documents\ResearchFinder\lancet_daily_scraper.py"
 timeout /t 1200
 "C:/Users/ethan/AppData/Local/Programs/Python/Python311/python.exe" "C:\Users\ethan\Documents\ResearchFinder\daily_scorer.py"

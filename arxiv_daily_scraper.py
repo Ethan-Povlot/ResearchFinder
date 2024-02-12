@@ -5,5 +5,6 @@ for i in range(10):
         df = get_arxiv_days_back(2)
         df.to_pickle(r'daily_temp_files\arxiv_temp.pkl')
         break
-    except:
+    except Exception as e:
+        print(e)
         continue

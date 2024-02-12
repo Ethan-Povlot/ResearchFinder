@@ -87,7 +87,10 @@ def download_arxiv_old(arxiv_id, source):#mostly deprecated, just a backup metho
     elif source == 'medrxiv':
         driver.get(f'https://www.medrxiv.org/content/{arxiv_id}.full.pdf')
 
-    
+    try:
+        os.remove(r"C:\Users\ethan\Downloads\temp.pdf")
+    except:
+        pass
     keyboard.press_and_release('ctrl + s')
     sleep(1)
     keyboard.write('temp.pdf')
@@ -127,7 +130,6 @@ def osf_download(publication_id):
     publication_link = r'https://osf.io/download/'+publication_id
     out=  get_page(BytesIO(requests.get(publication_link).content), reader=True)
     if out ==[]:
-        print('old')
         return osf_download_old(publication_link)
     return out
 
@@ -204,20 +206,20 @@ def get_osf(num_days):
                 continue
             # global pub
             # pub = publication
-            #try:
-            data_auths = requests.get(f'https://api.osf.io/v2/preprints/{paper_id}/citation/', headers=headers).json()['data']['attributes']['author']
-            subjects = publication['attributes']['subjects'][0]
-            title = publication["attributes"]["title"]
-            abstract = publication['attributes']['description']
-            url = publication['links']['html']
-            date = publication['attributes']['date_published']
-            emails = osf_download(publication['relationships']['primary_file']['links']['related']['href'][28:])
-            if i%10 ==0:
-                print(i)
-            i+=1
-            out.append([paper_id, data_auths, subjects, title, abstract, url, date, emails])
-            # except:
-            #     pass
+            try:
+                data_auths = requests.get(f'https://api.osf.io/v2/preprints/{paper_id}/citation/', headers=headers).json()['data']['attributes']['author']
+                subjects = publication['attributes']['subjects'][0]
+                title = publication["attributes"]["title"]
+                abstract = publication['attributes']['description']
+                url = publication['links']['html']
+                date = publication['attributes']['date_published']
+                emails = osf_download(publication['relationships']['primary_file']['links']['related']['href'][28:])
+                if i%10 ==0:
+                    print(i)
+                i+=1
+                out.append([paper_id, data_auths, subjects, title, abstract, url, date, emails])
+            except:
+                pass
         try:
             api_url =data['links']['next']
             if api_url == None:
